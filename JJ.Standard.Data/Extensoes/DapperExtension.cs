@@ -72,9 +72,7 @@ namespace JJ.Standard.Data.Extensoes
 
                 var valor = propriedade.GetValue(entity);
                 if (valor is DateTime dateTimeValue)
-                {
-                    valor = dateTimeValue.Date.ToString("yyyy-MM-dd");
-                }
+                    valor = SQLTradutorFactory.TratarData(valor);
 
                 colunas.Add($"{propriedade.Name}");
                 parametros.Add(propriedade.Name, valor);
@@ -119,9 +117,7 @@ namespace JJ.Standard.Data.Extensoes
 
                 var valor = propriedade.GetValue(entity);
                 if (valor is DateTime dateTimeValue)
-                {
                     valor = SQLTradutorFactory.TratarData(valor);
-                }
 
                 colunas.Add($"{propriedade.Name} = @{propriedade.Name}");
                 parametros.Add(propriedade.Name, valor);

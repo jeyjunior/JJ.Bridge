@@ -15,9 +15,9 @@ namespace JJ.Standard.Data
         private IDbTransaction _transaction;
         private bool _disposed;
 
-        public UnitOfWork(IDbConnection dbConnection)
+        public UnitOfWork()
         {
-            _connection = dbConnection ?? throw new ArgumentException("Falha o obter tipo de conexao com base de dados. Connection: " + nameof(dbConnection));
+            _connection = Config.ObterConexao();
         }
 
         public IDbConnection Connection => _connection;

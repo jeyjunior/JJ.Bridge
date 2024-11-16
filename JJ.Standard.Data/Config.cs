@@ -14,7 +14,6 @@ namespace JJ.Standard.Data
         public static void DefinirConexao(eConexao conexao)
         {
             Conexao = conexao;
-
             CarregarConfiguracoes();
         }
 

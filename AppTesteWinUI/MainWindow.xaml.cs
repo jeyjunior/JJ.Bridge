@@ -1,3 +1,5 @@
+using JJ.Standard.Data.Interfaces;
+using JJ.Standard.Data.Extensoes;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -23,14 +25,28 @@ namespace AppTesteWinUI
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        private readonly IUnitOfWork uow;
         public MainWindow()
         {
             this.InitializeComponent();
+            uow = Bootstrap.Container.GetInstance<IUnitOfWork>();
         }
 
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
-            myButton.Content = "Clicked";
+            var pessoa = uow.Connection.ObterLista<Pessoa>();
+
+            try
+            {
+                uow.Begin();
+                var ret = uow.Connection.Adicionar(new Pessoa { PK_Pessoa = 1, Nome = "teste 'SELECT * FROM Pessoa' DROP TABLE PESSOA" }, uow.Transaction);
+
+                uow.Commit();
+            }
+            catch (Exception)
+            {
+                uow.Rollback();
+            }
         }
     }
 }

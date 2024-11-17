@@ -14,12 +14,48 @@ namespace JJ.Standard.Core.Atributos
     [AttributeUsage(AttributeTargets.Property)]
     public class Editavel : Attribute
     {
+        public bool HabilitarEdicao { get; private set; }
         public Editavel(bool valor)
         {
             HabilitarEdicao = valor;
         }
 
-        public bool HabilitarEdicao { get; private set; }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class TamanhoString : Attribute
+    {
+        public int Tamanho { get; private set; }
+        public TamanhoString(int tamanho)
+        {
+            Tamanho = tamanho;
+        }
+
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class TamanhoDecimal : Attribute
+    {
+        public int Tamanho { get; private set; }
+        public int Decimais { get; private set; }
+        public TamanhoDecimal(int tamanho, int decimais)
+        {
+            Tamanho = tamanho;
+            Decimais = decimais;
+        }
+
+    }
+
+    public class Relacionamento : Attribute
+    {
+        public string Tabela { get; private set; }
+        public string ChavePrimaria { get; private set; }
+
+        public Relacionamento(string tabela, string chavePrimaria = "Id")
+        {
+            Tabela = tabela;
+            ChavePrimaria = chavePrimaria;
+        }
     }
 
     [AttributeUsage(AttributeTargets.Property)]

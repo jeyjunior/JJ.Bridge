@@ -7,13 +7,52 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using JJ.Standard.Core.Atributos;
+using JJ.Standard.Data.Enum;
 using JJ.Standard.Data.Utilidades;
 
 namespace JJ.Standard.Data.Extensoes
 {
     public static class DapperExtension
     {
+        public static bool VerificarTabelaExistente<T>(this IDbConnection connection)
+        {
+            Type entidade = typeof(T);
+            string tabela = entidade.Name;
+
+            string query = "";
+
+            switch (Config.Conexao)
+            {
+                case eConexao.SQLite:
+                    query = $"SELECT 1 FROM {tabela} LIMIT 1;";
+                    break;
+
+                case eConexao.SQLServer:
+                    query = $"SELECT TOP 1 1 FROM {tabela};";
+                    break;
+
+                case eConexao.MySql:
+                    query = $"SELECT 1 FROM {tabela} LIMIT 1;";
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Banco de dados não suportado para verificação de tabelas.");
+            }
+
+            try
+            {
+                var resultado = connection.ExecuteScalar<int?>(query);
+
+                return resultado.HasValue && resultado.Value > 0;
+            }
+            catch 
+            {
+                return false;
+            }
+        }
+
         public static T Obter<T>(this IDbConnection connection, int id)
         {
             Type entidade = typeof(T);
@@ -154,6 +193,83 @@ namespace JJ.Standard.Data.Extensoes
             string sqlDeletar = $"DELETE FROM {tabela} WHERE {coluna} = @Id";
 
             return connection.Execute(sqlDeletar, new { Id = id }, transaction);
+        }
+
+        public static bool CriarTabela<T>(this IDbConnection connection, IDbTransaction transaction = null)
+        {
+            Type entityType = typeof(T);
+            string tableName = entityType.Name;
+
+            StringBuilder createTableSql = new StringBuilder();
+            createTableSql.Append($"CREATE TABLE {tableName} (");
+
+            PropertyInfo[] properties = entityType.GetProperties();
+            List<string> columns = new List<string>();
+            List<string> foreignKeys = new List<string>(); // Lista para armazenar as FK
+
+            foreach (PropertyInfo property in properties)
+            {
+                // Ignorar propriedades não editáveis
+                if (property.GetCustomAttribute<Editavel>()?.HabilitarEdicao == false)
+                    continue;
+
+                Type propertyType = property.PropertyType;
+                string columnName = property.Name;
+                string columnType = SQLTradutorFactory.ObterTipoColuna(property);
+
+                // Verificar se é Chave Primária
+                if (property.GetCustomAttribute<ChavePrimaria>() != null)
+                {
+                    columns.Add($"{columnName} {columnType} {SQLTradutorFactory.ObterSintaxeChavePrimaria()}");
+                }
+                else
+                {
+                    // Verificar se a propriedade é obrigatória
+                    if (property.GetCustomAttribute<Obrigatorio>() != null)
+                    {
+                        columns.Add($"{columnName} {columnType} NOT NULL");
+                    }
+                    else
+                    {
+                        columns.Add($"{columnName} {columnType}");
+                    }
+                }
+
+                // Verificar se é uma Foreign Key
+                var relacionamento = property.GetCustomAttribute<Relacionamento>();
+                if (relacionamento != null)
+                {
+                    // Adicionar a definição da chave estrangeira com o nome da chave primária referenciada
+                    string fk = SQLTradutorFactory.ObterSintaxeForeignKey(columnName, relacionamento.Tabela, relacionamento.ChavePrimaria);
+                    foreignKeys.Add(fk);
+                }
+            }
+
+            // Adicionar as colunas ao SQL
+            createTableSql.Append(string.Join(", ", columns));
+
+            // Adicionar as Foreign Keys (se houver)
+            if (foreignKeys.Any())
+            {
+                createTableSql.Append(", ");
+                createTableSql.Append(string.Join(", ", foreignKeys));
+            }
+
+            createTableSql.Append(");");
+
+            try
+            {
+                var ret = connection.Execute(createTableSql.ToString(), transaction: transaction);
+                return (ret > 0);
+            }
+            catch (SqlException ex) when (ex.Message.Contains("already exists"))
+            {
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Erro ao criar a tabela '{tableName}': {createTableSql}", ex);
+            }
         }
 
         public static bool CriarTabelas(this IDbConnection connection, string query, IDbTransaction transaction = null)

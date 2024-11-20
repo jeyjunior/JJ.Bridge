@@ -1,4 +1,5 @@
-﻿using JJ.Standard.Data.DTO;
+﻿using JJ.Standard.Core.Extensoes;
+using JJ.Standard.Data.DTO;
 using JJ.Standard.Data.Enum;
 using System;
 using System.IO;
@@ -8,6 +9,8 @@ namespace JJ.Standard.Data
 {
     public static class Config
     {
+        private static string _caminhoServidor = "";
+
         public static eConexao Conexao { get; private set; }
         public static Parametros? ConfiguracoesBanco { get; private set; } = null;
 
@@ -15,6 +18,11 @@ namespace JJ.Standard.Data
         {
             Conexao = conexao;
             CarregarConfiguracoes();
+        }
+
+        public static void DefinirCaminhoServidor(string caminho)
+        {
+            _caminhoServidor = caminho;
         }
 
         public static void CarregarConfiguracoes()
@@ -42,11 +50,18 @@ namespace JJ.Standard.Data
             if (configuracoesBanco == null)
                 throw new Exception("Falha ao carregar as configurações do banco.");
 
-            if(Conexao == eConexao.SQLite)
+            if (Conexao == eConexao.SQLite)
             {
-                string pathSqlite = Path.Combine(raizProjeto, "DBCore");
-                Directory.CreateDirectory(pathSqlite);
-                configuracoesBanco.Sqlite = Path.Combine(pathSqlite, "dbsqlite.db");
+                if(_caminhoServidor.ObterValorOuPadrao("").Trim() != "")
+                {
+                    configuracoesBanco.Sqlite = Path.Combine(_caminhoServidor, "dbsqlite.db");
+                }
+                else
+                {
+                    string caminhoTemp = Path.Combine(Path.GetTempPath(), "DBCore");
+                    Directory.CreateDirectory(caminhoTemp); 
+                    configuracoesBanco.Sqlite = Path.Combine(caminhoTemp, "dbsqlite.db");
+                }
             }
 
             ConfiguracoesBanco = configuracoesBanco;

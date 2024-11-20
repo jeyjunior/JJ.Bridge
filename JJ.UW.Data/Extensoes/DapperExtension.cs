@@ -7,12 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using JJ.Standard.Core.Atributos;
-using JJ.Standard.Data.Enum;
-using JJ.Standard.Data.Utilidades;
+using JJ.UW.Core.Atributos;
+using JJ.UW.Data.Enum;
+using JJ.UW.Data.Utilidades;
 
-namespace JJ.Standard.Data.Extensoes
+namespace JJ.UW.Data.Extensoes
 {
     public static class DapperExtension
     {
@@ -262,10 +261,6 @@ namespace JJ.Standard.Data.Extensoes
             {
                 var ret = connection.Execute(createTableSql.ToString(), transaction: transaction);
                 return (ret > 0);
-            }
-            catch (SqlException ex) when (ex.Message.Contains("already exists"))
-            {
-                return false;
             }
             catch (Exception ex)
             {

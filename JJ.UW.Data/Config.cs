@@ -1,6 +1,6 @@
 ﻿using JJ.UW.Core.Extensoes;
 using JJ.UW.Data.DTO;
-using JJ.UW.Data.Enum;
+using JJ.UW.Data.Enumerador;
 using System;
 using System.IO;
 using Windows.Storage;

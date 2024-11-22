@@ -19,7 +19,6 @@ namespace JJ.UW.Core.Atributos
         {
             HabilitarEdicao = valor;
         }
-
     }
 
     [AttributeUsage(AttributeTargets.Property)]

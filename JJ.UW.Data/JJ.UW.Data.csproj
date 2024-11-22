@@ -122,7 +122,7 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="DTO\Parametros.cs" />
-    <Compile Include="Enum\eBase.cs" />
+    <Compile Include="Enumerador\eBase.cs" />
     <Compile Include="Extensoes\DapperExtension.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -145,9 +145,6 @@
     </PackageReference>
     <PackageReference Include="SQLitePCLRaw.bundle_green">
       <Version>2.1.10</Version>
-    </PackageReference>
-    <PackageReference Include="System.Data.SqlClient">
-      <Version>4.9.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

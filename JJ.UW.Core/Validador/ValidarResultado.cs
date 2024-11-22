@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JJ.UW.Core.Validation
+namespace JJ.UW.Core.Validador
 {
     public class ValidarResultado
     {

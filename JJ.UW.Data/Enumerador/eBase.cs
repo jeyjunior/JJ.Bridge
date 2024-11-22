@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.UW.Data.Enum
+namespace JJ.UW.Data.Enumerador
 {
     public enum eConexao
     {

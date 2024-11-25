@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JJ.UW.Data.Enumerador;
+using JJ.UW.Core.Enumerador;
 using JJ.UW.Data.Interfaces;
 
 namespace JJ.UW.Data

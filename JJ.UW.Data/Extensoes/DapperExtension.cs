@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
 using JJ.UW.Core.Atributos;
-using JJ.UW.Data.Enumerador;
+using JJ.UW.Core.Enumerador;
 using JJ.UW.Data.Utilidades;
 
 namespace JJ.UW.Data.Extensoes

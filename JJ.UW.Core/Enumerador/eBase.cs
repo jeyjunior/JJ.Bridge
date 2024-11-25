@@ -8,6 +8,13 @@ using Windows.UI.Xaml.Controls;
 
 namespace JJ.UW.Core.Enumerador
 {
+    public enum eConexao
+    {
+        SQLite = 1,
+        SQLServer = 2,
+        MySql = 3,
+    }
+
     public enum eIconesGlyph
     {
         [CodigoGlyph("\u25B2", "Calibri")]
@@ -23,5 +30,18 @@ namespace JJ.UW.Core.Enumerador
         Dashboard,
         [CodigoGlyph("\uF4B5", "Segoe UI")]
         Transacao,
+
+        [CodigoGlyph("\uE0E7", "Segoe UI Symbol")]
+        Check,
+        [CodigoGlyph("\uE094", "Segoe UI Symbol")]
+        Pesquisa,
+        [CodigoGlyph("\uE0B6", "Segoe UI Symbol")]
+        Adicionar,
+        [CodigoGlyph("\uE121", "Segoe UI Symbol")]
+        Relogio,
+        [CodigoGlyph("\uE171", "Segoe UI Symbol")]
+        Exclamacao,
+        [CodigoGlyph("\uE115", "Segoe UI Symbol")]
+        Configuracao,
     }
 }

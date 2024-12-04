@@ -31,14 +31,11 @@ namespace JJ.UW.Data
         {
             try
             {
-                if (!File.Exists(arquivoParametros))
-                {
-                    CriarArquivoConfiguracao();
+                bool arquivoExiste = File.Exists(arquivoParametros);
+                
+                CarregarParametros();
 
-                    return true;
-                }
-
-                return false;
+                return arquivoExiste;
             }
             catch (Exception)
             {
@@ -87,7 +84,7 @@ namespace JJ.UW.Data
             }
         }
 
-        private static void CriarArquivoConfiguracao()
+        private static void CarregarParametros()
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             string caminhoArquivo = Path.Combine(localFolder.Path, arquivoParametros);

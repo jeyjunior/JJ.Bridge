@@ -10,5 +10,28 @@ namespace JJ.UW.Core.Extensoes
         {
             return (valor == null);
         }
+
+        public static int ConverterParaInt32(this object valor, int valorPadrao = 0 )
+        {
+            return int.TryParse(valor.ToString(), out int result) ? result : valorPadrao;
+        }
+
+        public static int ObterValorInt32(this object obj, string propriedade, int valorPadrao = 0)
+        {
+            if (obj == null || propriedade.ObterValorOuPadrao("").Trim() == "")
+                return valorPadrao;
+
+            var propInfo = obj.GetType().GetProperty(propriedade);
+
+            if (propInfo == null)
+                return valorPadrao;
+
+            var valor = propInfo.GetValue(obj);   
+
+            if(valor == null) 
+                return valorPadrao;
+
+            return valor.ConverterParaInt32();
+        }
     }
 }

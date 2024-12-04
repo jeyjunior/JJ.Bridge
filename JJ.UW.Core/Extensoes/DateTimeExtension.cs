@@ -13,5 +13,20 @@ namespace JJ.UW.Core.Extensoes
 
             return d != null ? d.Value.ToString() : padrao;
         }
+
+        public static DateTime ObterPrimeiroDiaDoMes(this DateTime data)
+        {
+            return new DateTime(data.Year, data.Month, 1);
+        }
+
+        public static DateTime ObterUltimoDiaDoMes(this DateTime data)
+        {
+            return new DateTime(data.Year, data.Month, 1).AddMonths(1).AddDays(-1);
+        }
+
+        public static DateTime ObterPrimeiroDiaDoMesSeguinte(this DateTime data)
+        {
+            return new DateTime(data.Year, data.Month, 1).AddMonths(1);
+        }
     }
 }

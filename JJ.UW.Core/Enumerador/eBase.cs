@@ -26,6 +26,9 @@ namespace JJ.UW.Core.Enumerador
         [CodigoGlyph("\u25C0", "Calibri")]
         TrianguloEsquerda,
 
+        [CodigoGlyph("\u25CF", "Segoe UI Symbol")]
+        Circulo,
+
         [CodigoGlyph("\uF4CA", "Segoe UI")]
         Dashboard,
         [CodigoGlyph("\uF4B5", "Segoe UI")]
@@ -43,5 +46,17 @@ namespace JJ.UW.Core.Enumerador
         Exclamacao,
         [CodigoGlyph("\uE115", "Segoe UI Symbol")]
         Configuracao,
+    }
+
+    public enum eFontFamily
+    {
+        [Fonte("Calibri")]
+        Calibri,
+
+        [Fonte("Segoe UI")]
+        SegoeUI,
+
+        [Fonte("Segoe UI Symbol")]
+        SegoeUISymbol,
     }
 }

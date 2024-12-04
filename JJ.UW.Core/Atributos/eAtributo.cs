@@ -18,4 +18,15 @@ namespace JJ.UW.Core.Atributos
             FontFamily = fontFamily;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+    public sealed class Fonte : Attribute
+    {
+        public string FontFamily { get; }
+
+        public Fonte(string fontFamily)
+        {
+            FontFamily = fontFamily;
+        }
+    }
 }

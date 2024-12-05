@@ -124,6 +124,9 @@
     <Compile Include="Atributos\eAtributo.cs" />
     <Compile Include="DTOs\Item.cs" />
     <Compile Include="Enumerador\eBase.cs" />
+    <Compile Include="Extensoes\BooleanExtension.cs" />
+    <Compile Include="Extensoes\ButtonExtension.cs" />
+    <Compile Include="Extensoes\DecimalExtension.cs" />
     <Compile Include="Extensoes\DateTimeExtension.cs" />
     <Compile Include="Extensoes\FontIconExtension.cs" />
     <Compile Include="Extensoes\ObjectExtension.cs" />

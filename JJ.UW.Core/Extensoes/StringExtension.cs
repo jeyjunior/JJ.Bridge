@@ -61,17 +61,6 @@ namespace JJ.UW.Core.Extensoes
             return char.ToUpper(valor[0]) + valor.Substring(1);
         }
 
-        public static string ToSQL(this string input)
-        {
-            var stringBuilder = new StringBuilder();
-            var lines = input.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var line in lines)
-                stringBuilder.AppendLine(line.Trim());
-
-            return stringBuilder.ToString();
-        }
-
         public static int ConverterParaInt32(this string valor, int valorPadrao = 0)
         {
             if (string.IsNullOrWhiteSpace(valor))
@@ -86,6 +75,30 @@ namespace JJ.UW.Core.Extensoes
                 return false;
 
             return int.TryParse(valor, out _);
+        }
+
+        /// <summary>
+        /// Formata uma string, removendo linhas em branco e espaços extras antes e depois de cada linha,
+        /// de modo a garantir que a string resultante esteja pronta para ser utilizada em uma consulta SQL.
+        /// </summary>
+        /// <param name="input">A string de entrada que será processada.</param>
+        /// <returns>Uma string formatada, onde cada linha foi "limpa" de espaços em excesso e linhas em branco foram removidas.</returns>
+        /// <example>
+        /// <code>
+        /// var query = "SELECT * FROM Tabela\n WHERE coluna = 'valor'  \n  ";
+        /// Resultado: "SELECT * FROM Tabela\nWHERE coluna = 'valor'"
+        /// var result = query.ToSQL();
+        /// </code>
+        /// </example>
+        public static string ToSQL(this string input)
+        {
+            var stringBuilder = new StringBuilder();
+            var lines = input.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var line in lines)
+                stringBuilder.AppendLine(line.Trim());
+
+            return stringBuilder.ToString();
         }
     }
 }

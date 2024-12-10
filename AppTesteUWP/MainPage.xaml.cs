@@ -1,4 +1,5 @@
 ﻿using AppTesteWinUI;
+using JJ.UW.Core.Componentes.Mensagem;
 using JJ.UW.Data.Extensoes;
 using JJ.UW.Data.Interfaces;
 using System;
@@ -8,6 +9,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Notifications;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,29 +28,65 @@ namespace AppTesteUWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private readonly IUnitOfWork uow;
 
         public MainPage()
         {
             this.InitializeComponent();
+        }
 
-            uow = Bootstrap.Container.GetInstance<IUnitOfWork>();
+        private void btnMessageDialog_Click(object sender, RoutedEventArgs e)
+        {
+            var messageDialog = new MessageDialog("Esta é uma MessageDialog do UWP.", "Título da Mensagem");
+            messageDialog.Commands.Add(new UICommand("OK", (command) => { /* ação opcional */ }));
+            messageDialog.ShowAsync();
+        }
 
-            var pessoa = uow.Connection.ObterLista<Pessoa>();
-
-            try
+        private async void btnContentDialog_Click(object sender, RoutedEventArgs e)
+        {
+            var contentDialog = new ContentDialog
             {
-                uow.Begin();
+                Title = "Título do ContentDialog",
+                Content = "Este é um ContentDialog. Você pode adicionar mais conteúdo aqui.",
+                PrimaryButtonText = "OK",
+                SecondaryButtonText = "Cancelar"
+            };
 
-                var ret1 = uow.Connection.CriarTabela<Pessoa>();
-                var ret2 = uow.Connection.Adicionar(new Pessoa { PK_Pessoa = 1, Nome = "teste 'SELECT * FROM Pessoa' DROP TABLE PESSOA" }, uow.Transaction);
-
-                uow.Commit();
-            }
-            catch (Exception)
+            contentDialog.PrimaryButtonClick += (s, args) =>
             {
-                uow.Rollback();
+                System.Diagnostics.Debug.WriteLine("Botão OK pressionado.");
+            };
+
+            contentDialog.SecondaryButtonClick += (s, args) =>
+            {
+                System.Diagnostics.Debug.WriteLine("Botão Cancelar pressionado.");
+            };
+
+            ContentDialogResult resultado = await contentDialog.ShowAsync();
+
+            if(resultado == ContentDialogResult.Primary)
+            {
+                var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText01);
+                var toastText = toastXml.GetElementsByTagName("text")[0];
+                toastText.AppendChild(toastXml.CreateTextNode("Esta é uma Toast Notification!"));
+
+                var toast = new ToastNotification(toastXml);
+                ToastNotificationManager.CreateToastNotifier().Show(toast);
             }
         }
+
+        private void btnToastNotification_Click(object sender, RoutedEventArgs e)
+        {
+            var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText01);
+            var toastText = toastXml.GetElementsByTagName("text")[0];
+            toastText.AppendChild(toastXml.CreateTextNode("Esta é uma Toast Notification!"));
+
+            var toast = new ToastNotification(toastXml);
+            ToastNotificationManager.CreateToastNotifier().Show(toast);
+        }
+
+        private async void btnTeste_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
     }
 }

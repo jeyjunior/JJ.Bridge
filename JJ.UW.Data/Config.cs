@@ -27,49 +27,123 @@ namespace JJ.UW.Data
             arquivoParametros = Path.Combine(localFolder.Path, "configuracoes.json");
         }
 
-        public static bool PrimeiroAcesso()
+        public static void Iniciar(eConexao eConexao)
+        {
+            CarregarParametros();
+            DefinirConexaoAtiva(eConexao);
+            CarregarConfiguracoes();
+        }
+
+        private static void CarregarParametros()
         {
             try
             {
-                bool arquivoExiste = File.Exists(arquivoParametros);
-                
-                CarregarParametros();
+                var localFolder = ApplicationData.Current.LocalFolder;
+                string caminhoArquivo = Path.Combine(localFolder.Path, arquivoParametros);
 
-                return arquivoExiste;
+                var sqlite = new Parametro
+                {
+                    ID = 1,
+                    Nome = "Sqlite",
+                    Valor = Path.Combine(ApplicationData.Current.LocalFolder.Path, "dbsqlite.db"),
+                };
+
+                var sqlServer = new Parametro
+                {
+                    ID = 2,
+                    Nome = "SqlServer",
+                    Valor = "",
+                };
+
+                var mySql = new Parametro
+                {
+                    ID = 3,
+                    Nome = "MySql",
+                    Valor = "",
+                };
+
+                var parametros = new Parametros
+                {
+                    BaseAtiva = sqlite,
+                    BaseDados = new System.Collections.Generic.List<Parametro>()
+                {
+                    sqlite,
+                    sqlServer,
+                    mySql,
+                }
+                };
+
+                string json = JsonConvert.SerializeObject(parametros, Formatting.Indented);
+
+                File.WriteAllText(caminhoArquivo, json);
+
+                ConfiguracoesBanco = parametros;
             }
-            catch (Exception)
+            catch (ArgumentNullException ex)
             {
-                return true;
+                throw new Exception("Erro ao carregar parâmetros: valor nulo encontrado.\n" + ex.Message, ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new Exception("Erro de permissão ao acessar arquivos ou pastas.\n" + ex.Message, ex);
+            }
+            catch (IOException ex)
+            {
+                throw new Exception("Erro ao ler ou escrever no arquivo.\n" + ex.Message, ex);
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw new Exception("Erro ao serializar os parâmetros para JSON.\n" + ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Falha ao carregar parametros de configuração.\n" + ex.Message, ex);
             }
         }
 
-        public static void DefinirConexaoAtiva(eConexao eConexao)
+        private static void DefinirConexaoAtiva(eConexao eConexao)
         {
-            Parametro baseEscolhida = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => (eConexao)i.ID == eConexao);
-
-            if (baseEscolhida != null)
+            try
             {
-                ConfiguracoesBanco.BaseAtiva = baseEscolhida;
+                Parametro baseEscolhida = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => (eConexao)i.ID == eConexao);
 
-                try
+                if (baseEscolhida != null)
                 {
+                    ConfiguracoesBanco.BaseAtiva = baseEscolhida;
+
                     string json = JsonConvert.SerializeObject(ConfiguracoesBanco, Formatting.Indented);
                     File.WriteAllText(arquivoParametros, json);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Erro ao salvar as configurações: " + ex.Message);
-                }
 
-                Conexao = eConexao;
+                    Conexao = eConexao;
+                }
+                else
+                {
+                    throw new Exception("Base de dados não encontrada para a conexão selecionada.");
+                }
             }
-            else
+            catch (ArgumentNullException ex)
             {
-                throw new Exception("Base de dados não encontrada para a conexão selecionada.");
+                throw new Exception("Erro: algum parâmetro necessário está nulo ao serializar ou salvar as configurações.\n" + ex.Message, ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new Exception("Erro de permissão: não foi possível acessar o arquivo para salvar as configurações.\n" + ex.Message, ex);
+            }
+            catch (IOException ex)
+            {
+                throw new Exception("Erro ao tentar ler ou escrever no arquivo de configurações.\n" + ex.Message, ex);
+            }
+            catch (JsonSerializationException ex)
+            {
+                throw new Exception("Erro ao serializar as configurações para JSON.\n" + ex.Message, ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao definir a conexão ativa.\n" + ex.Message, ex);
             }
         }
 
-        public static void CarregarConfiguracoes()
+        private static void CarregarConfiguracoes()
         {
             try
             {
@@ -78,54 +152,22 @@ namespace JJ.UW.Data
 
                 Conexao = (eConexao)ConfiguracoesBanco.BaseAtiva.ID;
             }
+            catch (FileNotFoundException ex)
+            {
+                throw new Exception("Arquivo de configurações não encontrado: " + ex.Message, ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new Exception("Erro de permissão ao tentar acessar o arquivo de configurações.\n" + ex.Message, ex);
+            }
+            catch (IOException ex)
+            {
+                throw new Exception("Erro ao ler o arquivo de configurações.\n" + ex.Message, ex);
+            }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao ler as configurações: " + ex.Message);
+                throw new Exception("Erro ao ler as configurações: " + ex.Message, ex);
             }
-        }
-
-        private static void CarregarParametros()
-        {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            string caminhoArquivo = Path.Combine(localFolder.Path, arquivoParametros);
-
-            var sqlite = new Parametro
-            {
-                ID = 1,
-                Nome = "Sqlite",
-                Valor = Path.Combine(ApplicationData.Current.LocalFolder.Path, "dbsqlite.db"),
-            };
-
-            var sqlServer = new Parametro
-            {
-                ID = 2,
-                Nome = "SqlServer",
-                Valor = "",
-            };
-
-            var mySql = new Parametro
-            {
-                ID = 3,
-                Nome = "MySql",
-                Valor = "",
-            };
-
-            var parametros = new Parametros
-            {
-                BaseAtiva = sqlite,
-                BaseDados = new System.Collections.Generic.List<Parametro>() 
-                {
-                    sqlite,
-                    sqlServer,
-                    mySql,
-                }
-            };
-
-            string json = JsonConvert.SerializeObject(parametros, Formatting.Indented);
-
-            File.WriteAllText(caminhoArquivo, json);
-
-            ConfiguracoesBanco = parametros;
         }
 
         public static System.Data.IDbConnection ObterConexao()

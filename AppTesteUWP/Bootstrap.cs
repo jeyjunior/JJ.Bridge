@@ -14,7 +14,7 @@ namespace AppTesteWinUI
         public static Container Container { get; private set; }
         public static void Iniciar()
         {
-            
+            Config.Iniciar(JJ.UW.Core.Enumerador.eConexao.SQLite);
             Container = new Container();
             Container.Options.DefaultLifestyle = Lifestyle.Scoped;
 

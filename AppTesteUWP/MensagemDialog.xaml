@@ -1,0 +1,63 @@
+﻿<ContentDialog
+    x:Class="AppTesteUWP.MensagemDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppTesteUWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    CornerRadius="5">
+
+    <Grid Margin="0" Padding="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <Frame Background="Red" Width="2" Height="24"/>
+            <TextBlock Text="Título" 
+                       FontSize="20" 
+                       FontWeight="Bold" 
+                       Margin="0"
+                       Padding="0"
+                       VerticalAlignment="Stretch" 
+                       HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <TextBlock x:Name="MensagemTextBlock" 
+                   Grid.Row="1" 
+                   Text="Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste Teste" 
+                   TextWrapping="Wrap" 
+                   HorizontalAlignment="Stretch" 
+                   VerticalAlignment="Stretch" 
+                   Margin="0" />
+
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Spacing="10">
+
+            <Button x:Name="BtnPrimario" 
+                    Content="SIM" 
+                    FontWeight="Bold"
+                    Background="#FF5A5A5A"
+                    Width="100" 
+                    Height="32"
+                    Click="BtnPrimario_Click" />
+
+            <Button x:Name="BtnSecundario" 
+                    Content="OK"
+                    FontWeight="Bold"
+                    Width="100"
+                    Height="32"
+                    Click="BtnSecundario_Click" />
+        </StackPanel>
+    </Grid>
+</ContentDialog>

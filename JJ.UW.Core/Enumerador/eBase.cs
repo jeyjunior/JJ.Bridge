@@ -59,4 +59,13 @@ namespace JJ.UW.Core.Enumerador
         [Fonte("Segoe UI Symbol")]
         SegoeUISymbol,
     }
+
+    public enum MensagemResultado
+    {
+        Nenhum = 0,
+        Sim = 1,
+        Nao = 2,
+        OK = 3,
+        Cancelar = 4,
+    }
 }

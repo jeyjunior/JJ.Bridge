@@ -21,6 +21,7 @@
                 <Button Content="Botao Primario"/>
                 <Button Content="Botao Secundario" Click="btnTeste_Click"/>
             </StackPanel>
+                <Button Content="Mensagem Teste" Click="Button_Click"/>
 
         </StackPanel>
     </StackPanel>

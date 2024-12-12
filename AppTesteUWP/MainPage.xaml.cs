@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -18,8 +19,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace AppTesteUWP
 {
@@ -86,7 +85,43 @@ namespace AppTesteUWP
 
         private async void btnTeste_Click(object sender, RoutedEventArgs e)
         {
+            var resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem.Erro("Teste mensagem erro JUNIOR");
+            resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem.Aviso("Teste mensagem erro JUNIOR");
+            resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem.Sucesso("Teste mensagem erro JUNIOR");
+            resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem.Informacao("Teste mensagem erro JUNIOR");
+            resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem
+                .Pergunta("Pergunta: ", "Qual a cor do cavalo branco de napoleão?", new SolidColorBrush(Colors.Blue), "Branco", "Azul");
+
+            //if (resultado == JJ.UW.Core.Enumerador.MensagemResultado.Sim)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("Botão Primário clicado");
+            //}
+            //else if (resultado == JJ.UW.Core.Enumerador.MensagemResultado.Nao)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("Botão Secundário clicado");
+            //}
+            //else
+            //{
+            //    System.Diagnostics.Debug.WriteLine("Fechado sem clicar em um botão");
+            //}
         }
 
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var resultado = await Mensagem.Erro("Teste de Mensagem");
+
+            if (resultado == ContentDialogResult.Primary)
+            {
+                System.Diagnostics.Debug.WriteLine("Botão Primário clicado");
+            }
+            else if (resultado == ContentDialogResult.Secondary)
+            {
+                System.Diagnostics.Debug.WriteLine("Botão Secundário clicado");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Fechado sem clicar em um botão");
+            }
+        }
     }
 }

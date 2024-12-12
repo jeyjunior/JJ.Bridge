@@ -1,5 +1,4 @@
 ﻿using AppTesteWinUI;
-using JJ.UW.Core.Componentes.Mensagem;
 using JJ.UW.Data.Extensoes;
 using JJ.UW.Data.Interfaces;
 using System;
@@ -85,25 +84,7 @@ namespace AppTesteUWP
 
         private async void btnTeste_Click(object sender, RoutedEventArgs e)
         {
-            var resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem.Erro("Teste mensagem erro JUNIOR");
-            resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem.Aviso("Teste mensagem erro JUNIOR");
-            resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem.Sucesso("Teste mensagem erro JUNIOR");
-            resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem.Informacao("Teste mensagem erro JUNIOR");
-            resultado = await JJ.UW.Core.Componentes.Mensagem.Mensagem
-                .Pergunta("Pergunta: ", "Qual a cor do cavalo branco de napoleão?", new SolidColorBrush(Colors.Blue), "Branco", "Azul");
 
-            //if (resultado == JJ.UW.Core.Enumerador.MensagemResultado.Sim)
-            //{
-            //    System.Diagnostics.Debug.WriteLine("Botão Primário clicado");
-            //}
-            //else if (resultado == JJ.UW.Core.Enumerador.MensagemResultado.Nao)
-            //{
-            //    System.Diagnostics.Debug.WriteLine("Botão Secundário clicado");
-            //}
-            //else
-            //{
-            //    System.Diagnostics.Debug.WriteLine("Fechado sem clicar em um botão");
-            //}
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)

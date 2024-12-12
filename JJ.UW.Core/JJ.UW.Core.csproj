@@ -122,12 +122,7 @@
   <ItemGroup>
     <Compile Include="Atributos\Atributo.cs" />
     <Compile Include="Atributos\eAtributo.cs" />
-    <Compile Include="Componentes\Mensagem\Mensagem.cs" />
-    <Compile Include="Componentes\Mensagem\MensagemDialog.xaml.cs">
-      <DependentUpon>MensagemDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DTOs\Item.cs" />
-    <Compile Include="DTOs\MensagemDTO.cs" />
     <Compile Include="Enumerador\eBase.cs" />
     <Compile Include="Extensoes\BooleanExtension.cs" />
     <Compile Include="Extensoes\ButtonExtension.cs" />
@@ -147,12 +142,6 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Componentes\Mensagem\MensagemDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

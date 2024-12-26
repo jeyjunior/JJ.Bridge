@@ -12,7 +12,7 @@ namespace JJ.UW.Core.Extensoes
 {
     public static class FontIconExtension
     {
-        public static void AtualizarIcone(this FontIcon ficon, eIconesGlyph icone, Brush cor)
+        public static void AtualizarIcone(this FontIcon ficon, IconesGlyph icone, Brush cor)
         {
             var codigo = Imagem.ObterGlyph(icone);
 

@@ -14,6 +14,27 @@ namespace JJ.UW.Core.Extensoes
             return d != null ? d.Value.ToString() : padrao;
         }
 
+        public static DateTime ObterValorOuPadrao(this DateTime? d, DateTime padrao = default)
+        {
+            if (d == null)
+                return padrao;
+
+            return d.Value;
+        }
+
+        public static DateTime ObterValorOuPadrao(this DateTimeOffset? d, DateTime padrao = default) 
+        {
+            if (d == null)
+                return padrao;
+
+            return d.Value.DateTime;
+        }
+
+        public static DateTime? ConverterParaDateTime(this DateTimeOffset? d)
+        {
+            return d?.DateTime;
+        }
+
         public static DateTime ObterPrimeiroDiaDoMes(this DateTime data)
         {
             return new DateTime(data.Year, data.Month, 1);

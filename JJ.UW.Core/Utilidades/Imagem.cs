@@ -13,14 +13,14 @@ namespace JJ.UW.Core.Utilidades
 {
     public static class Imagem
     {
-        public static FontIcon Obter(eIconesGlyph eIcones)
+        public static FontIcon Obter(IconesGlyph eIcones)
         {
             var valor = ObterGlyph(eIcones);
             
             return new FontIcon() { Glyph = valor.Glyph, FontFamily = new FontFamily(valor.FontFamily) };
         }
 
-        public static CodigoGlyph ObterGlyph(eIconesGlyph eIcones) 
+        public static CodigoGlyph ObterGlyph(IconesGlyph eIcones) 
         {
             var campo = eIcones.GetType().GetField(eIcones.ToString());
 

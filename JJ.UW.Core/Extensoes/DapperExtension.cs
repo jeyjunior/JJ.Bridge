@@ -22,17 +22,17 @@ namespace JJ.UW.Data.Extensoes
 
             string query = "";
 
-            switch (Config.ConexaoSelecionada)
+            switch (Config.Conexao)
             {
-                case Conexao.SQLite:
+                case eConexao.SQLite:
                     query = $"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{tabela}';";
                     break;
 
-                case Conexao.SQLServer:
+                case eConexao.SQLServer:
                     query = $"SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tabela}'";
                     break;
 
-                case Conexao.MySql:
+                case eConexao.MySql:
                     query = $"SELECT count(*) FROM information_schema.tables WHERE table_name = '{tabela}'";
                     break;
 
@@ -51,7 +51,6 @@ namespace JJ.UW.Data.Extensoes
                 return false;
             }
         }
-
 
         public static T Obter<T>(this IDbConnection connection, int id)
         {

@@ -12,21 +12,21 @@ namespace JJ.UW.Core.Utilidades
 {
     public static class Texto
     {
-        public static Fonte ObterFonte(eFontFamily eFontFamily)
+        public static Fonte ObterFonte(FamiliaFonte eFontFamily)
         {
             var campo = eFontFamily.GetType().GetField(eFontFamily.ToString());
 
             return (Fonte)Attribute.GetCustomAttribute(campo, typeof(Fonte));
         }
 
-        public static FontFamily ObterFontFamily(eFontFamily eFontFamily)
+        public static FontFamily ObterFontFamily(FamiliaFonte eFontFamily)
         {
             var valor = ObterFonte(eFontFamily);
 
             return new FontFamily(valor.FontFamily.ToString());
         }
 
-        public static string ObterFonteString(eFontFamily eFontFamily)
+        public static string ObterFonteString(FamiliaFonte eFontFamily)
         {
             return ObterFonte(eFontFamily).FontFamily.ToString();
         }

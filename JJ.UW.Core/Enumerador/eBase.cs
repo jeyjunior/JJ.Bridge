@@ -8,14 +8,14 @@ using Windows.UI.Xaml.Controls;
 
 namespace JJ.UW.Core.Enumerador
 {
-    public enum eConexao
+    public enum Conexao
     {
         SQLite = 1,
         SQLServer = 2,
         MySql = 3,
     }
 
-    public enum eIconesGlyph
+    public enum IconesGlyph
     {
         [CodigoGlyph("\u25B2", "Calibri")]
         TrianguloCima,
@@ -48,7 +48,7 @@ namespace JJ.UW.Core.Enumerador
         Configuracao,
     }
 
-    public enum eFontFamily
+    public enum FamiliaFonte
     {
         [Fonte("Calibri")]
         Calibri,
@@ -67,5 +67,14 @@ namespace JJ.UW.Core.Enumerador
         Nao = 2,
         OK = 3,
         Cancelar = 4,
+    }
+
+    public enum TipoMensagem
+    {
+        Nenhuma = 0,
+        Informacao = 1,
+        Sucesso = 2,
+        Alerta = 3,
+        Erro = 4
     }
 }

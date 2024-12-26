@@ -69,6 +69,15 @@ namespace JJ.UW.Core.Extensoes
             return int.TryParse(valor, out int result) ? result : valorPadrao;
         }
 
+        public static decimal ConverterParaDecimal(this string valor, decimal valorPadrao = 0m)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return valorPadrao;
+
+            return decimal.TryParse(valor, out decimal result) ? result : valorPadrao;
+        }
+
+
         public static bool EhNumero(this string valor)
         {
             if (string.IsNullOrWhiteSpace(valor))

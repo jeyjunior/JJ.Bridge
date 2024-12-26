@@ -11,12 +11,20 @@ namespace JJ.UW.Core.Extensoes
             return (valor == null);
         }
 
-        public static int ConverterParaInt32(this object valor, int valorPadrao = 0 )
+        public static int ConverterParaInt32(this object valor, int valorPadrao = 0)
         {
             if (valor == null)
                 return valorPadrao;
 
             return int.TryParse(valor.ToString(), out int result) ? result : valorPadrao;
+        }
+
+        public static int? ConverterParaInt32Nullable(this object valor)
+        {
+            if (valor == null)
+                return null;
+
+            return int.TryParse(valor.ToString(), out int result) ? result : (int?)null;
         }
 
         /// <summary>

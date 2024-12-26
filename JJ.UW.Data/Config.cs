@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Windows.Storage;
 using Newtonsoft.Json;
 using JJ.UW.Core.Extensoes;
 using JJ.UW.Data.DTO;
-using System.Linq;
 using JJ.UW.Core.Enumerador;
 
 namespace JJ.UW.Data
@@ -13,7 +13,7 @@ namespace JJ.UW.Data
     {
         private static string arquivoParametros;
 
-        public static eConexao Conexao { get; private set; }
+        public static Conexao ConexaoSelecionada { get; private set; }
         public static Parametros ConfiguracoesBanco { get; private set; } = null;
 
         static Config()
@@ -27,10 +27,10 @@ namespace JJ.UW.Data
             arquivoParametros = Path.Combine(localFolder.Path, "configuracoes.json");
         }
 
-        public static void Iniciar(eConexao eConexao)
+        public static void Iniciar(Conexao conexao)
         {
             CarregarParametros();
-            DefinirConexaoAtiva(eConexao);
+            DefinirConexaoAtiva(conexao);
             CarregarConfiguracoes();
         }
 
@@ -101,11 +101,11 @@ namespace JJ.UW.Data
             }
         }
 
-        private static void DefinirConexaoAtiva(eConexao eConexao)
+        private static void DefinirConexaoAtiva(Conexao conexao)
         {
             try
             {
-                Parametro baseEscolhida = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => (eConexao)i.ID == eConexao);
+                Parametro baseEscolhida = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => (Conexao)i.ID == conexao);
 
                 if (baseEscolhida != null)
                 {
@@ -114,7 +114,7 @@ namespace JJ.UW.Data
                     string json = JsonConvert.SerializeObject(ConfiguracoesBanco, Formatting.Indented);
                     File.WriteAllText(arquivoParametros, json);
 
-                    Conexao = eConexao;
+                    ConexaoSelecionada = conexao;
                 }
                 else
                 {
@@ -150,7 +150,7 @@ namespace JJ.UW.Data
                 string json = File.ReadAllText(arquivoParametros);
                 ConfiguracoesBanco = JsonConvert.DeserializeObject<Parametros>(json);
 
-                Conexao = (eConexao)ConfiguracoesBanco.BaseAtiva.ID;
+                ConexaoSelecionada = (Conexao)ConfiguracoesBanco.BaseAtiva.ID;
             }
             catch (FileNotFoundException ex)
             {
@@ -172,13 +172,14 @@ namespace JJ.UW.Data
 
         public static System.Data.IDbConnection ObterConexao()
         {
-            switch (Conexao)
+            switch (ConexaoSelecionada)
             {
-                case eConexao.SQLite: return ConectarSqlite();
-                case eConexao.SQLServer: return ConectarSqlServer();
-                case eConexao.MySql: return ConectarMySql();
-                default: throw new Exception("Nenhuma conexão identificada.");
+                case Conexao.SQLite: return ConectarSqlite();
+                case Conexao.SQLServer: return ConectarSqlServer();
+                case Conexao.MySql: return ConectarMySql();
             }
+
+            return null;
         }
 
         private static Microsoft.Data.Sqlite.SqliteConnection ConectarSqlite()

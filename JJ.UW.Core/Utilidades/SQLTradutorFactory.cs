@@ -1,9 +1,8 @@
-﻿
+﻿using JJ.UW.Core.Atributos;
+using JJ.UW.Core.Enumerador;
 using System;
 using System.Linq;
 using System.Reflection;
-using JJ.UW.Core.Atributos;
-using JJ.UW.Core.Enumerador;
 
 namespace JJ.UW.Data.Utilidades
 {
@@ -13,11 +12,11 @@ namespace JJ.UW.Data.Utilidades
         {
             string query = "";
 
-            switch (Config.ConexaoSelecionada)
+            switch (Config.Conexao)
             {
-                case Conexao.SQLite: query = "SELECT last_insert_rowid();"; break;
-                case Conexao.SQLServer: query = "SELECT SCOPE_IDENTITY();"; break;
-                case Conexao.MySql: query = "SELECT LAST_INSERT_ID();"; break;
+                case eConexao.SQLite: query = "SELECT last_insert_rowid();"; break;
+                case eConexao.SQLServer: query = "SELECT SCOPE_IDENTITY();"; break;
+                case eConexao.MySql: query = "SELECT LAST_INSERT_ID();"; break;
             }
 
             return query;
@@ -27,11 +26,11 @@ namespace JJ.UW.Data.Utilidades
         {
             DateTime dateTimeValue = (DateTime)value;
 
-            switch (Config.ConexaoSelecionada)
+            switch (Config.Conexao)
             {
-                case Conexao.SQLite:
-                case Conexao.MySql:
-                case Conexao.SQLServer:
+                case eConexao.SQLite:
+                case eConexao.MySql:
+                case eConexao.SQLServer:
                     // Tratar a data conforme necessário para cada DB
                     break;
             }
@@ -41,13 +40,13 @@ namespace JJ.UW.Data.Utilidades
 
         public static string ObterSintaxeChavePrimaria()
         {
-            switch (Config.ConexaoSelecionada)
+            switch (Config.Conexao)
             {
-                case Conexao.SQLite:
+                case eConexao.SQLite:
                     return "PRIMARY KEY AUTOINCREMENT"; 
-                case Conexao.SQLServer:
+                case eConexao.SQLServer:
                     return "PRIMARY KEY IDENTITY"; 
-                case Conexao.MySql:
+                case eConexao.MySql:
                     return "PRIMARY KEY AUTO_INCREMENT";
                 default:
                     throw new InvalidOperationException("Banco de dados não suportado para sintaxe de chave primária.");
@@ -56,13 +55,13 @@ namespace JJ.UW.Data.Utilidades
 
         public static string ObterSintaxeForeignKey(string columnName, string tabelaReferenciada, string chavePrimaria)
         {
-            switch (Config.ConexaoSelecionada)
+            switch (Config.Conexao)
             {
-                case Conexao.SQLite:
+                case eConexao.SQLite:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
-                case Conexao.SQLServer:
+                case eConexao.SQLServer:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
-                case Conexao.MySql:
+                case eConexao.MySql:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
                 default:
                     throw new InvalidOperationException("Banco de dados não suportado para criação de chaves estrangeiras.");
@@ -108,9 +107,9 @@ namespace JJ.UW.Data.Utilidades
                     throw new ArgumentException($"Tipo de propriedade não suportado: {propriedade.PropertyType.Name}");
             }
 
-            switch (Config.ConexaoSelecionada)
+            switch (Config.Conexao)
             {
-                case Conexao.SQLite:
+                case eConexao.SQLite:
                     if (propertyType == typeof(bool))
                     {
                         tipoColuna = "INTEGER"; 
@@ -121,14 +120,14 @@ namespace JJ.UW.Data.Utilidades
                     }
                     break;
 
-                case Conexao.SQLServer:
+                case eConexao.SQLServer:
                     if (propertyType == typeof(bool))
                     {
                         tipoColuna = "BIT"; 
                     }
                     break;
 
-                case Conexao.MySql:
+                case eConexao.MySql:
                     if (propertyType == typeof(bool))
                     {
                         tipoColuna = "TINYINT(1)"; 
@@ -139,7 +138,7 @@ namespace JJ.UW.Data.Utilidades
                     throw new InvalidOperationException("Banco de dados não suportado para tipos de dados.");
             }
 
-            if (Config.ConexaoSelecionada == Conexao.MySql || Config.ConexaoSelecionada == Conexao.SQLServer)
+            if (Config.Conexao == eConexao.MySql || Config.Conexao == eConexao.SQLServer)
             {
                 if (propertyType == typeof(string))
                 {

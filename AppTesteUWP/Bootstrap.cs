@@ -1,11 +1,11 @@
-﻿using JJ.UW.Data;
-using JJ.UW.Data.Interfaces;
-using SimpleInjector;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimpleInjector;
+using JJ.UW.Data;
+using JJ.UW.Data.Interfaces;
 
 namespace AppTesteWinUI
 {

@@ -1,12 +1,12 @@
-﻿using JJ.UW.Core.Enumerador;
-using JJ.UW.Core.Utilidades;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using JJ.UW.Core.Enumerador;
+using JJ.UW.Core.Utilidades;
 
 namespace JJ.UW.Core.Extensoes
 {

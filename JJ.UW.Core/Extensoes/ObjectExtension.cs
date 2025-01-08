@@ -59,6 +59,37 @@ namespace JJ.UW.Core.Extensoes
         }
 
         /// <summary>
+        /// Obtém o valor de uma propriedade de um objeto e tenta convertê-lo para uma string.
+        /// Se a propriedade não existir, se o valor for nulo ou se não puder ser convertido, retorna o valor padrão fornecido.
+        /// </summary>
+        /// <param name="obj">O objeto do qual a propriedade será acessada.</param>
+        /// <param name="propriedade">O nome da propriedade que será acessada no objeto.</param>
+        /// <param name="valorPadrao">Valor retornado caso a propriedade não exista, seja nula ou não possa ser convertida para string. O valor padrão é uma string vazia, se não especificado.</param>
+        /// <returns>O valor convertido para string, ou o valor padrão caso haja algum erro no processo.</returns>
+        /// <example>
+        /// <code>
+        /// var valor = objeto.ObterValorString("Nome", "Valor Padrão");
+        /// </code>
+        /// </example>
+        public static string ObterValorString(this object obj, string propriedade, string valorPadrao = "")
+        {
+            if (obj == null || string.IsNullOrWhiteSpace(propriedade))
+                return valorPadrao;
+
+            var propInfo = obj.GetType().GetProperty(propriedade);
+
+            if (propInfo == null)
+                return valorPadrao;
+
+            var valor = propInfo.GetValue(obj);
+
+            if (valor == null)
+                return valorPadrao;
+
+            return valor.ToString();
+        }
+
+        /// <summary>
         /// Obtém o valor de uma propriedade de um objeto e tenta convertê-lo para um valor do tipo <see cref="DateTime"/>.
         /// Se a propriedade não existir, se o valor for nulo ou se não puder ser convertido, retorna o valor padrão fornecido.
         /// </summary>

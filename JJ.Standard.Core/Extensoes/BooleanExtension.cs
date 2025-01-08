@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.UW.Core.Extensoes
+namespace JJ.Standard.Core.Extensoes
 {
     public static class BooleanExtension
     {

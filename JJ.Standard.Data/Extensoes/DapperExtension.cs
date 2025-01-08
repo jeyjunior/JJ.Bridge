@@ -7,9 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using JJ.Standard.Core.Atributos;
-using JJ.Standard.Data.Enum;
 using JJ.Standard.Data.Utilidades;
 
 namespace JJ.Standard.Data.Extensoes
@@ -23,17 +21,17 @@ namespace JJ.Standard.Data.Extensoes
 
             string query = "";
 
-            switch (Config.Conexao)
+            switch (Config.ConexaoSelecionada)
             {
-                case eConexao.SQLite:
+                case Conexao.SQLite:
                     query = $"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{tabela}';";
                     break;
 
-                case eConexao.SQLServer:
+                case Conexao.SQLServer:
                     query = $"SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tabela}'";
                     break;
 
-                case eConexao.MySql:
+                case Conexao.MySql:
                     query = $"SELECT count(*) FROM information_schema.tables WHERE table_name = '{tabela}'";
                     break;
 
@@ -108,7 +106,7 @@ namespace JJ.Standard.Data.Extensoes
 
                 if (propriedade.GetCustomAttribute<Obrigatorio>() != null && propriedade.GetValue(entity) == null)
                     throw new InvalidOperationException($"A propriedade {propriedade.Name} é obrigatória e não foi preenchida.");
-                
+
 
                 var valor = propriedade.GetValue(entity);
                 if (valor is DateTime dateTimeValue)
@@ -262,10 +260,6 @@ namespace JJ.Standard.Data.Extensoes
             {
                 var ret = connection.Execute(createTableSql.ToString(), transaction: transaction);
                 return (ret > 0);
-            }
-            catch (SqlException ex) when (ex.Message.Contains("already exists"))
-            {
-                return false;
             }
             catch (Exception ex)
             {

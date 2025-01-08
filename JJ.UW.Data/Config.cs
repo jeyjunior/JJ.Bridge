@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using JJ.UW.Core.Extensoes;
 using JJ.UW.Data.DTO;
 using JJ.UW.Core.Enumerador;
+using System.Data.SQLite;
 
 namespace JJ.UW.Data
 {
@@ -184,8 +185,9 @@ namespace JJ.UW.Data
 
         private static Microsoft.Data.Sqlite.SqliteConnection ConectarSqlite()
         {
-            SQLitePCL.Batteries.Init();
-
+            // SQLitePCL.Batteries.Init();
+            SQLitePCL.Batteries_V2.Init();
+            
             var sqlite = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => i.ID == 1);
 
             if (!File.Exists(sqlite.Valor.ObterValorOuPadrao("").Trim()))

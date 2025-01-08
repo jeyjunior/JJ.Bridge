@@ -121,7 +121,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Atributos\Atributo.cs" />
-    <Compile Include="Atributos\eAtributo.cs" />
     <Compile Include="DTOs\Item.cs" />
     <Compile Include="Enumerador\eBase.cs" />
     <Compile Include="Extensoes\BooleanExtension.cs" />

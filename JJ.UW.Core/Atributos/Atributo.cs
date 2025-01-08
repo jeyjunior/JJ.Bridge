@@ -61,4 +61,28 @@ namespace JJ.UW.Core.Atributos
     public class Obrigatorio : Attribute
     {
     }
+
+    [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+    public sealed class CodigoGlyph : Attribute
+    {
+        public string Glyph { get; }
+        public string FontFamily { get; }
+
+        public CodigoGlyph(string glyph, string fontFamily)
+        {
+            Glyph = glyph;
+            FontFamily = fontFamily;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+    public sealed class Fonte : Attribute
+    {
+        public string FontFamily { get; }
+
+        public Fonte(string fontFamily)
+        {
+            FontFamily = fontFamily;
+        }
+    }
 }

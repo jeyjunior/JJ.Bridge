@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{949F49E7-EA40-44AC-8E08-C9E0F7212FDA}</ProjectGuid>
+    <ProjectGuid>{3DF86C3C-BF02-445D-AA1D-43F6F9D5205E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JJ.UW.Data</RootNamespace>
-    <AssemblyName>JJ.UW.Data</AssemblyName>
+    <RootNamespace>JJ.UW.Styles</RootNamespace>
+    <AssemblyName>JJ.UW.Styles</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
@@ -120,46 +120,21 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
-    <Compile Include="DTO\Parametros.cs" />
-    <Compile Include="Extensoes\DapperExtension.cs" />
-    <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Enumerador\eBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitOfWork.cs" />
-    <Compile Include="Utilidades\SQLTradutorFactory.cs" />
-    <EmbeddedResource Include="Properties\JJ.UW.Data.rd.xml" />
+    <Compile Include="Utilitarios\Cor.cs" />
+    <EmbeddedResource Include="Properties\JJ.UW.Styles.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper">
-      <Version>2.1.35</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Data.Sqlite.Core">
-      <Version>9.0.0</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="MySqlConnector">
-      <Version>2.4.0</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.bundle_green">
-      <Version>2.1.10</Version>
-    </PackageReference>
-    <PackageReference Include="System.Data.SQLite.Core.ICU">
-      <Version>1.0.0.2</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="parametros.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JJ.UW.Core\JJ.UW.Core.csproj">
-      <Project>{c7495ceb-25a7-44d9-ba94-4bfc3775a560}</Project>
-      <Name>JJ.UW.Core</Name>
-    </ProjectReference>
+    <Page Include="Estilos\Cor\Cores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

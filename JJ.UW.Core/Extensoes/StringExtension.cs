@@ -109,5 +109,28 @@ namespace JJ.UW.Core.Extensoes
 
             return stringBuilder.ToString();
         }
+
+        public static string PasswordChar(this string input, char passwordChar = '*')
+        {
+            if (input.ObterValorOuPadrao("").Trim() == "")
+                return "";
+
+            return new string(passwordChar, input.Length);
+        }
+
+        public static string LimparEntradaSQL(this string input)
+        {
+            if (input.ObterValorOuPadrao("").Trim() == "")
+                return "";
+
+            string[] palavrasChaveSQL = { "DROP", "DELETE", "INSERT", "UPDATE", "SELECT", "TRUNCATE", "ALTER", "GRANT", "REVOKE", "--", ";", "/*", "*/" };
+
+            foreach (var palavra in palavrasChaveSQL)
+                input = input.Replace(palavra, "", StringComparison.OrdinalIgnoreCase);
+
+            input = input.Replace("'", "''"); 
+
+            return input;
+        }
     }
 }

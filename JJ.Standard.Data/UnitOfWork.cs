@@ -4,8 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JJ.Standard.Data.Enum;
 using JJ.Standard.Data.Interfaces;
+using JJ.Standard.Core.Enumerador;
 
 namespace JJ.Standard.Data
 {

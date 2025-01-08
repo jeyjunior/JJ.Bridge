@@ -1,8 +1,8 @@
-﻿using JJ.Standard.Core.Atributos;
-using JJ.Standard.Data.Enum;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
+using JJ.Standard.Core.Atributos;
+using JJ.Standard.Core.Enumerador;
 
 namespace JJ.Standard.Data.Utilidades
 {
@@ -12,11 +12,11 @@ namespace JJ.Standard.Data.Utilidades
         {
             string query = "";
 
-            switch (Config.Conexao)
+            switch (Config.ConexaoSelecionada)
             {
-                case eConexao.SQLite: query = "SELECT last_insert_rowid();"; break;
-                case eConexao.SQLServer: query = "SELECT SCOPE_IDENTITY();"; break;
-                case eConexao.MySql: query = "SELECT LAST_INSERT_ID();"; break;
+                case Conexao.SQLite: query = "SELECT last_insert_rowid();"; break;
+                case Conexao.SQLServer: query = "SELECT SCOPE_IDENTITY();"; break;
+                case Conexao.MySql: query = "SELECT LAST_INSERT_ID();"; break;
             }
 
             return query;
@@ -26,11 +26,11 @@ namespace JJ.Standard.Data.Utilidades
         {
             DateTime dateTimeValue = (DateTime)value;
 
-            switch (Config.Conexao)
+            switch (Config.ConexaoSelecionada)
             {
-                case eConexao.SQLite:
-                case eConexao.MySql:
-                case eConexao.SQLServer:
+                case Conexao.SQLite:
+                case Conexao.MySql:
+                case Conexao.SQLServer:
                     // Tratar a data conforme necessário para cada DB
                     break;
             }
@@ -40,13 +40,13 @@ namespace JJ.Standard.Data.Utilidades
 
         public static string ObterSintaxeChavePrimaria()
         {
-            switch (Config.Conexao)
+            switch (Config.ConexaoSelecionada)
             {
-                case eConexao.SQLite:
-                    return "PRIMARY KEY AUTOINCREMENT"; 
-                case eConexao.SQLServer:
-                    return "PRIMARY KEY IDENTITY"; 
-                case eConexao.MySql:
+                case Conexao.SQLite:
+                    return "PRIMARY KEY AUTOINCREMENT";
+                case Conexao.SQLServer:
+                    return "PRIMARY KEY IDENTITY";
+                case Conexao.MySql:
                     return "PRIMARY KEY AUTO_INCREMENT";
                 default:
                     throw new InvalidOperationException("Banco de dados não suportado para sintaxe de chave primária.");
@@ -55,13 +55,13 @@ namespace JJ.Standard.Data.Utilidades
 
         public static string ObterSintaxeForeignKey(string columnName, string tabelaReferenciada, string chavePrimaria)
         {
-            switch (Config.Conexao)
+            switch (Config.ConexaoSelecionada)
             {
-                case eConexao.SQLite:
+                case Conexao.SQLite:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
-                case eConexao.SQLServer:
+                case Conexao.SQLServer:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
-                case eConexao.MySql:
+                case Conexao.MySql:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
                 default:
                     throw new InvalidOperationException("Banco de dados não suportado para criação de chaves estrangeiras.");
@@ -72,27 +72,47 @@ namespace JJ.Standard.Data.Utilidades
         {
             Type propertyType = Nullable.GetUnderlyingType(propriedade.PropertyType) ?? propriedade.PropertyType;
 
-            // Verificar o tipo de dado genérico
-            string tipoColuna = propertyType.Name.ToLower() switch
-            {
-                "string" => "TEXT",            
-                "int32" => "INTEGER",          
-                "int64" => "BIGINT",           
-                "decimal" => "DECIMAL",        
-                "double" => "DOUBLE",          
-                "float" => "FLOAT",            
-                "datetime" => "DATETIME",      
-                "boolean" => "BOOLEAN",        
-                "int16" => "SMALLINT",         
-                _ => throw new ArgumentException($"Tipo de propriedade não suportado: {propriedade.PropertyType.Name}")
-            };
+            string tipoColuna;
 
-            switch (Config.Conexao)
+            switch (propertyType.Name.ToLower())
             {
-                case eConexao.SQLite:
+                case "string":
+                    tipoColuna = "TEXT";
+                    break;
+                case "int32":
+                    tipoColuna = "INTEGER";
+                    break;
+                case "int64":
+                    tipoColuna = "BIGINT";
+                    break;
+                case "decimal":
+                    tipoColuna = "DECIMAL";
+                    break;
+                case "double":
+                    tipoColuna = "DOUBLE";
+                    break;
+                case "float":
+                    tipoColuna = "FLOAT";
+                    break;
+                case "datetime":
+                    tipoColuna = "DATETIME";
+                    break;
+                case "boolean":
+                    tipoColuna = "BOOLEAN";
+                    break;
+                case "int16":
+                    tipoColuna = "SMALLINT";
+                    break;
+                default:
+                    throw new ArgumentException($"Tipo de propriedade não suportado: {propriedade.PropertyType.Name}");
+            }
+
+            switch (Config.ConexaoSelecionada)
+            {
+                case Conexao.SQLite:
                     if (propertyType == typeof(bool))
                     {
-                        tipoColuna = "INTEGER"; 
+                        tipoColuna = "INTEGER";
                     }
                     else if (propertyType == typeof(decimal))
                     {
@@ -100,14 +120,14 @@ namespace JJ.Standard.Data.Utilidades
                     }
                     break;
 
-                case eConexao.SQLServer:
+                case Conexao.SQLServer:
                     if (propertyType == typeof(bool))
                     {
-                        tipoColuna = "BIT"; 
+                        tipoColuna = "BIT";
                     }
                     break;
 
-                case eConexao.MySql:
+                case Conexao.MySql:
                     if (propertyType == typeof(bool))
                     {
                         tipoColuna = "TINYINT(1)";
@@ -118,16 +138,16 @@ namespace JJ.Standard.Data.Utilidades
                     throw new InvalidOperationException("Banco de dados não suportado para tipos de dados.");
             }
 
-            if (Config.Conexao == eConexao.MySql || Config.Conexao == eConexao.SQLServer)
+            if (Config.ConexaoSelecionada == Conexao.MySql || Config.ConexaoSelecionada == Conexao.SQLServer)
             {
                 if (propertyType == typeof(string))
                 {
-                    var tamanhoAttr = propriedade.GetCustomAttribute<TamanhoString>();
+                    var tamanhoAttr = propriedade.GetCustomAttributes(typeof(TamanhoString), false).FirstOrDefault() as TamanhoString;
                     tipoColuna = tamanhoAttr != null ? $"VARCHAR({tamanhoAttr.Tamanho})" : "TEXT";
                 }
                 else if (propertyType == typeof(decimal))
                 {
-                    var tamanhoAttr = propriedade.GetCustomAttribute<TamanhoDecimal>();
+                    var tamanhoAttr = propriedade.GetCustomAttributes(typeof(TamanhoDecimal), false).FirstOrDefault() as TamanhoDecimal;
                     tipoColuna = tamanhoAttr != null
                         ? $"DECIMAL({tamanhoAttr.Tamanho},{tamanhoAttr.Decimais})"
                         : "DECIMAL(18,2)";

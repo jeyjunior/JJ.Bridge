@@ -6,7 +6,7 @@ namespace JJ.UW.Core.DTOs
 {
     public class Item
     {
-        public int Id { get; set; }
+        public string ID { get; set; }
         public string Nome { get; set; }
     }
 }

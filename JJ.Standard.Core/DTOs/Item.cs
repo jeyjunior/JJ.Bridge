@@ -4,9 +4,9 @@ using System.Text;
 
 namespace JJ.Standard.Core.DTOs
 {
-    public class ItemDTO
+    public class Item
     {
-        public int Id { get; set; }
+        public string ID { get; set; }
         public string Nome { get; set; }
     }
 }

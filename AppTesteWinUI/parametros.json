@@ -1,4 +1,0 @@
-{
-  "SqlServer": "Data Source=JUNIOR\\JEYJUNIOR;Initial Catalog=ControleFinanceiro;Integrated Security=True;TrustServerCertificate=True;",
-  "MySql": "Server=127.0.0.1; Database=controlefinanceiro; Uid=root; Pwd=1234;"
-}

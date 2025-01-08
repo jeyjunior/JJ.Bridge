@@ -4,10 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 using Dapper;
 using JJ.Standard.Core.Atributos;
+using JJ.Standard.Core.Enumerador;
 using JJ.Standard.Data.Utilidades;
 
 namespace JJ.Standard.Data.Extensoes

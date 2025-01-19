@@ -12,23 +12,26 @@ namespace JJ.Standard.Data
 {
     public static class Config
     {
+        private static string caminhoArquivos = "";
         private static string arquivoParametros;
         public static Conexao ConexaoSelecionada { get; private set; }
         public static Parametros ConfiguracoesBanco { get; private set; } = null;
 
         static Config()
         {
-            CarregarCaminhoArquivoParametros();
         }
 
-        private static void CarregarCaminhoArquivoParametros()
+        private static void CarregarCaminhoArquivoParametros(string nomeAplicacao)
         {
             string caminhoDiretorioAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            arquivoParametros = Path.Combine(caminhoDiretorioAppData, "configuracoes.json");
+            caminhoArquivos = Path.Combine(caminhoDiretorioAppData, nomeAplicacao);
+
+            arquivoParametros = Path.Combine(caminhoArquivos, "configuracoes.json");
         }
 
-        public static void Iniciar(Conexao conexao)
+        public static void Iniciar(Conexao conexao, string nomeAplicacao = "JeyJunior")
         {
+            CarregarCaminhoArquivoParametros(nomeAplicacao);
             CarregarParametros();
             DefinirConexaoAtiva(conexao);
             CarregarConfiguracoes();
@@ -44,7 +47,7 @@ namespace JJ.Standard.Data
                 {
                     ID = 1,
                     Nome = "Sqlite",
-                    Valor = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "dbsqlite.db"),
+                    Valor = Path.Combine(caminhoArquivos, "dbsqlite.db"),
                 };
 
                 var sqlServer = new Parametro

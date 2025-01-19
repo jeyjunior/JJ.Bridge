@@ -1,14 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{949F49E7-EA40-44AC-8E08-C9E0F7212FDA}</ProjectGuid>
+    <ProjectGuid>{B441DE6A-B8D9-490A-AF34-138E11185E55}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JJ.UW.Data</RootNamespace>
-    <AssemblyName>JJ.UW.Data</AssemblyName>
+    <RootNamespace>JJ.UW.Cryptography</RootNamespace>
+    <AssemblyName>JJ.UW.Cryptography</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
@@ -120,51 +120,18 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
-    <Compile Include="DTO\Parametros.cs" />
-    <Compile Include="Extensoes\DapperExtension.cs" />
-    <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="AES\CriptografiaAES.cs" />
+    <Compile Include="Criptografia.cs" />
+    <Compile Include="Enumerador\eBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitOfWork.cs" />
-    <Compile Include="Utilidades\SQLTradutorFactory.cs" />
-    <EmbeddedResource Include="Properties\JJ.UW.Data.rd.xml" />
+    <EmbeddedResource Include="Properties\JJ.UW.Cryptography.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper">
-      <Version>2.1.35</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Data.Sqlite.Core">
-      <Version>9.0.0</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="MySqlConnector">
-      <Version>2.4.0</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.bundle_green">
-      <Version>2.1.10</Version>
-    </PackageReference>
-    <PackageReference Include="System.Data.SQLite.Core.ICU">
-      <Version>1.0.0.2</Version>
-    </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="parametros.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JJ.UW.Core\JJ.UW.Core.csproj">
-      <Project>{c7495ceb-25a7-44d9-ba94-4bfc3775a560}</Project>
-      <Name>JJ.UW.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JJ.UW.Cryptography\JJ.UW.Cryptography.csproj">
-      <Project>{b441de6a-b8d9-490a-af34-138e11185e55}</Project>
-      <Name>JJ.UW.Cryptography</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

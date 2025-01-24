@@ -9,20 +9,6 @@
     Background="Gray">
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" Margin="0" Padding="0">
-        <StackPanel Orientation="Vertical" Spacing="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-                <Frame Background="Red" Width="4" Height="24" VerticalAlignment="Stretch"/>
-                <TextBlock Text="Titulo" FontSize="18" Padding="0,0,0,2" FontWeight="Bold"/>
-            </StackPanel>
-
-            <TextBlock Text="Mensagem de erro descritiva...."/>
-
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Botao Primario"/>
-                <Button Content="Botao Secundario" Click="btnTeste_Click"/>
-            </StackPanel>
-                <Button Content="Mensagem Teste" Click="Button_Click"/>
-
-        </StackPanel>
+        <Button Click="Button_Click_1"></Button>
     </StackPanel>
 </Page>

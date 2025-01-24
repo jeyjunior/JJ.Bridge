@@ -1,4 +1,5 @@
 ﻿using AppTesteWinUI;
+using JJ.UW.Cryptography.Enumerador;
 using JJ.UW.Data.Extensoes;
 using JJ.UW.Data.Interfaces;
 using System;
@@ -32,77 +33,10 @@ namespace AppTesteUWP
             this.InitializeComponent();
         }
 
-        private void btnMessageDialog_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var messageDialog = new MessageDialog("Esta é uma MessageDialog do UWP.", "Título da Mensagem");
-            messageDialog.Commands.Add(new UICommand("OK", (command) => { /* ação opcional */ }));
-            messageDialog.ShowAsync();
-        }
-
-        private async void btnContentDialog_Click(object sender, RoutedEventArgs e)
-        {
-            var contentDialog = new ContentDialog
-            {
-                Title = "Título do ContentDialog",
-                Content = "Este é um ContentDialog. Você pode adicionar mais conteúdo aqui.",
-                PrimaryButtonText = "OK",
-                SecondaryButtonText = "Cancelar"
-            };
-
-            contentDialog.PrimaryButtonClick += (s, args) =>
-            {
-                System.Diagnostics.Debug.WriteLine("Botão OK pressionado.");
-            };
-
-            contentDialog.SecondaryButtonClick += (s, args) =>
-            {
-                System.Diagnostics.Debug.WriteLine("Botão Cancelar pressionado.");
-            };
-
-            ContentDialogResult resultado = await contentDialog.ShowAsync();
-
-            if(resultado == ContentDialogResult.Primary)
-            {
-                var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText01);
-                var toastText = toastXml.GetElementsByTagName("text")[0];
-                toastText.AppendChild(toastXml.CreateTextNode("Esta é uma Toast Notification!"));
-
-                var toast = new ToastNotification(toastXml);
-                ToastNotificationManager.CreateToastNotifier().Show(toast);
-            }
-        }
-
-        private void btnToastNotification_Click(object sender, RoutedEventArgs e)
-        {
-            var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText01);
-            var toastText = toastXml.GetElementsByTagName("text")[0];
-            toastText.AppendChild(toastXml.CreateTextNode("Esta é uma Toast Notification!"));
-
-            var toast = new ToastNotification(toastXml);
-            ToastNotificationManager.CreateToastNotifier().Show(toast);
-        }
-
-        private async void btnTeste_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var resultado = await Mensagem.Erro("Teste de Mensagem");
-
-            if (resultado == ContentDialogResult.Primary)
-            {
-                System.Diagnostics.Debug.WriteLine("Botão Primário clicado");
-            }
-            else if (resultado == ContentDialogResult.Secondary)
-            {
-                System.Diagnostics.Debug.WriteLine("Botão Secundário clicado");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Fechado sem clicar em um botão");
-            }
+            var ret = JJ.UW.Cryptography.Criptografia.Criptografar(TipoCriptografia.AES, "Teste123");
+            var ret2 = JJ.UW.Cryptography.Criptografia.Descriptografar(TipoCriptografia.AES, ret.Valor, ret.IV);
         }
     }
 }

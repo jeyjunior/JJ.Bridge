@@ -1,44 +1,111 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using JJ.UW.Cryptography.AES;
 using JJ.UW.Cryptography.Enumerador;
+using Windows.UI.WebUI;
 
 namespace JJ.UW.Cryptography
 {
     public static class Criptografia
     {
-        public static string Criptografar(TipoCriptografia tipo, string valor)
+        public static CriptografarResult Criptografar(CriptografarRequest criptografarRequest)
         {
-            string ret = "";
+            var result = new CriptografarResult() { Valor = "", IV = "", Erro = "" };
 
-            switch (tipo)
+            try
             {
-                case TipoCriptografia.AES: ret = CriptografiaAES.Criptografar(valor); break;
-                case TipoCriptografia.RSA: break;
-                case TipoCriptografia.DES: break;
-                default: throw new NotImplementedException($"Algoritmo de criptografia {tipo} não implementado.");
+                switch (criptografarRequest.TipoCriptografia)
+                {
+                    case TipoCriptografia.AES: result = CriptografiaAES.Criptografar(criptografarRequest); break;
+                    case TipoCriptografia.RSA: break;
+                    case TipoCriptografia.DES: break;
+                    default: throw new NotImplementedException($"Algoritmo de criptografia {criptografarRequest.TipoCriptografia} não implementado.");
+                }
+            }
+            catch (CryptographicException ex)
+            {
+                result.Erro = "Erro ao processar a criptografia. Tente novamente ou verifique a chave de criptografia.\n" +ex.Message ;
+            }
+            catch (IOException ex)
+            {
+                result.Erro = "Erro ao tentar acessar dados locais. Por favor, verifique a permissão ou a integridade dos arquivos.\n" + ex.Message;
+            }
+            catch (FormatException ex)
+            {
+                result.Erro = "Formato inválido detectado. Verifique os dados fornecidos e tente novamente.\n" + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                result.Erro = "Ocorreu um erro inesperado. Tente novamente mais tarde.\n" + ex.Message;
             }
 
-            return ret; 
+            return result;
         }
 
-        public static string Descriptografar(TipoCriptografia tipo, string valor)
+        public static DescriptografarResult Descriptografar(DescriptografarRequest descriptografarRequest)
         {
-            string ret = "";
+            var result = new DescriptografarResult { Valor = "", Erro = "" };
 
-            switch (tipo)
+            try
             {
-                case TipoCriptografia.AES: ret = CriptografiaAES.Descriptografar(valor); break; 
-                case TipoCriptografia.RSA: break; 
-                case TipoCriptografia.DES: break;
-                default: throw new NotImplementedException($"Algoritmo de criptografia {tipo} não implementado.");
+                switch (descriptografarRequest.TipoCriptografia)
+                {
+                    case TipoCriptografia.AES: result = CriptografiaAES.Descriptografar(descriptografarRequest); break;
+                    case TipoCriptografia.RSA: break;
+                    case TipoCriptografia.DES: break;
+                    default: throw new NotImplementedException($"Algoritmo de criptografia {descriptografarRequest.TipoCriptografia} não implementado.");
+                }
+            }
+            catch (CryptographicException ex)
+            {
+                result.Erro = "Erro ao processar a criptografia. Tente novamente ou verifique a chave de criptografia.\n" + ex.Message;
+            }
+            catch (IOException ex)
+            {
+                result.Erro = "Erro ao tentar acessar dados locais. Por favor, verifique a permissão ou a integridade dos arquivos.\n" + ex.Message;
+            }
+            catch (FormatException ex)
+            {
+                result.Erro = "Formato inválido detectado. Verifique os dados fornecidos e tente novamente.\n" + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                result.Erro = "Ocorreu um erro inesperado. Tente novamente mais tarde.\n" + ex.Message;
             }
 
-            return ret;
+            return result;
         }
     }
 
+    public class CriptografarResult
+    {
+        public string Valor { get; set; }
+        public string IV { get; set; }
+
+        public string Erro { get; set; }
+    }
+
+    public class CriptografarRequest
+    {
+        public TipoCriptografia TipoCriptografia { get; set; }
+        public string Valor { get; set; }
+        public string IV { get; set; }
+    }
+
+    public class DescriptografarRequest
+    {
+        public TipoCriptografia TipoCriptografia { get; set; }
+        public string Valor { get; set; }
+        public string IV { get; set; }
+    }
+    public class DescriptografarResult
+    {
+        public string Valor { get; set; }
+        public string Erro { get; set; }
+    }
 }

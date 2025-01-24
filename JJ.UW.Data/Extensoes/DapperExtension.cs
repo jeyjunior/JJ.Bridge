@@ -52,7 +52,6 @@ namespace JJ.UW.Data.Extensoes
             }
         }
 
-
         public static T Obter<T>(this IDbConnection connection, int id)
         {
             Type entidade = typeof(T);

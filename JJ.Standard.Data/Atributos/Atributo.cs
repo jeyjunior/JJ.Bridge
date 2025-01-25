@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace JJ.Standard.Core.Atributos
+namespace JJ.Standard.Data.Atributos
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class ChavePrimaria : Attribute

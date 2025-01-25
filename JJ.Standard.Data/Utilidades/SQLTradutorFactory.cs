@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using JJ.Standard.Core.Atributos;
-using JJ.Standard.Core.Enumerador;
+using JJ.Standard.Data.Atributos;
+using JJ.Standard.Data.Enumerador;
 
 namespace JJ.Standard.Data.Utilidades
 {

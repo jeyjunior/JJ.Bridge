@@ -182,21 +182,6 @@
       <Version>4.9.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JJ.UW.Core\JJ.UW.Core.csproj">
-      <Project>{c7495ceb-25a7-44d9-ba94-4bfc3775a560}</Project>
-      <Name>JJ.UW.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JJ.UW.Data\JJ.UW.Data.csproj">
-      <Project>{949f49e7-ea40-44ac-8e08-c9e0f7212fda}</Project>
-      <Name>JJ.UW.Data</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="JJ.UW.Cryptography">
-      <HintPath>..\..\UWP\GerenciadorDeSenhas\DLL\JJ.UW.Cryptography.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Dapper;
-using JJ.Standard.Core.Atributos;
-using JJ.Standard.Core.Enumerador;
+using JJ.Standard.Data.Enumerador;
 using JJ.Standard.Data.Utilidades;
+using JJ.Standard.Data.Atributos;
 
 namespace JJ.Standard.Data.Extensoes
 {

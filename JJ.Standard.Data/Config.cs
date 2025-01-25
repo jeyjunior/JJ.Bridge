@@ -5,8 +5,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using JJ.Standard.Data.DTO;
-using JJ.Standard.Core.Enumerador;
-using JJ.Standard.Core.Extensoes;
+using JJ.Standard.Data.Enumerador;
 
 namespace JJ.Standard.Data
 {
@@ -153,7 +152,10 @@ namespace JJ.Standard.Data
 
             var sqlite = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => i.ID == 1);
 
-            if (!File.Exists(sqlite.Valor.ObterValorOuPadrao("").Trim()))
+            if (string.IsNullOrEmpty(sqlite.Valor))
+                sqlite.Valor = "";
+            
+            if (!File.Exists(sqlite.Valor))
             {
                 using (var connection = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={sqlite.Valor}"))
                 {
@@ -169,14 +171,14 @@ namespace JJ.Standard.Data
         {
             get
             {
-                string connString = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => i.ID == 2).Valor.ObterValorOuPadrao("").Trim();
+                string connString = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => i.ID == 2).Valor.ToString();
                 return new Microsoft.Data.SqlClient.SqlConnection(connString);
             }
         }
 
         private static MySqlConnector.MySqlConnection ConectarMySql()
         {
-            string connString = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => i.ID == 3).Valor.ObterValorOuPadrao("").Trim();
+            string connString = ConfiguracoesBanco.BaseDados.FirstOrDefault(i => i.ID == 3).Valor.ToString();
             return new MySqlConnector.MySqlConnection(connString);
         }
     }

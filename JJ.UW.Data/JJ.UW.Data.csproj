@@ -155,16 +155,6 @@
   <ItemGroup>
     <None Include="parametros.json" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JJ.UW.Core\JJ.UW.Core.csproj">
-      <Project>{c7495ceb-25a7-44d9-ba94-4bfc3775a560}</Project>
-      <Name>JJ.UW.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\JJ.UW.Cryptography\JJ.UW.Cryptography.csproj">
-      <Project>{b441de6a-b8d9-490a-af34-138e11185e55}</Project>
-      <Name>JJ.UW.Cryptography</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

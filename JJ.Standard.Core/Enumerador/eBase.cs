@@ -4,13 +4,6 @@ using System.Text;
 
 namespace JJ.Standard.Core.Enumerador
 {
-    public enum Conexao
-    {
-        SQLite = 1,
-        SQLServer = 2,
-        MySql = 3,
-    }
-
     public enum MensagemResultado
     {
         Nenhum = 0,

@@ -6,11 +6,22 @@ namespace JJ.Standard.Core.Extensoes
 {
     public static class ObjectExtension
     {
+        /// <summary>
+        /// Verifica se o valor de um objeto é nulo.
+        /// </summary>
+        /// <param name="valor">O objeto a ser verificado.</param>
+        /// <returns>Retorna true se o objeto for nulo, caso contrário, retorna false.</returns>
         public static bool EhNulo(this object valor)
         {
             return (valor == null);
         }
 
+        /// <summary>
+        /// Converte um objeto para inteiro, retornando um valor padrão caso o objeto seja nulo ou a conversão falhe.
+        /// </summary>
+        /// <param name="valor">O objeto a ser convertido para inteiro.</param>
+        /// <param name="valorPadrao">O valor padrão a ser retornado caso a conversão falhe.</param>
+        /// <returns>O valor convertido para inteiro ou o valor padrão caso a conversão falhe.</returns>
         public static int ConverterParaInt32(this object valor, int valorPadrao = 0)
         {
             if (valor == null)
@@ -19,6 +30,11 @@ namespace JJ.Standard.Core.Extensoes
             return int.TryParse(valor.ToString(), out int result) ? result : valorPadrao;
         }
 
+        /// <summary>
+        /// Converte um objeto para inteiro, mas retorna um valor nulo caso o objeto seja nulo ou a conversão falhe.
+        /// </summary>
+        /// <param name="valor">O objeto a ser convertido para inteiro.</param>
+        /// <returns>O valor convertido para inteiro ou null caso a conversão falhe.</returns>
         public static int? ConverterParaInt32Nullable(this object valor)
         {
             if (valor == null)
@@ -50,9 +66,9 @@ namespace JJ.Standard.Core.Extensoes
             if (propInfo == null)
                 return valorPadrao;
 
-            var valor = propInfo.GetValue(obj);   
+            var valor = propInfo.GetValue(obj);
 
-            if(valor == null) 
+            if (valor == null)
                 return valorPadrao;
 
             return valor.ConverterParaInt32();

@@ -4,23 +4,31 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Dapper;
-using JJ.Standard.Data.Enumerador;
-using JJ.Standard.Data.Utilidades;
-using JJ.Standard.Data.Atributos;
+using JJ.NET.CrossData.Atributo;
+using JJ.NET.CrossData.Dicionario;
+using JJ.NET.CrossData.Enumerador;
 
-namespace JJ.Standard.Data.Extensoes
+namespace JJ.NET.CrossData.Extensao
 {
     public static class DapperExtension
     {
-        public static bool VerificarTabelaExistente<T>(this IDbConnection connection)
+        public static Conexao ConexaoAtiva { get; private set; }    
+
+        public static void DefinirConexaoAtiva(this IDbConnection dbConnection, Conexao conexao)
+        {
+            ConexaoAtiva = conexao;
+        }
+
+        public static bool VerificarTabelaExistente<T>(this IDbConnection connection, Conexao conexao)
         {
             Type entidade = typeof(T);
             string tabela = entidade.Name;
 
             string query = "";
 
-            switch (Config.ConexaoSelecionada)
+            switch (conexao)
             {
                 case Conexao.SQLite:
                     query = $"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{tabela}';";
@@ -108,14 +116,14 @@ namespace JJ.Standard.Data.Extensoes
 
                 var valor = propriedade.GetValue(entity);
                 if (valor is DateTime dateTimeValue)
-                    valor = SQLTradutorFactory.TratarData(valor);
+                    valor = SQLTradutorFactory.TratarData(valor, ConexaoAtiva);
 
                 colunas.Add($"{propriedade.Name}");
                 parametros.Add(propriedade.Name, valor);
             }
 
             string sql = $"INSERT INTO {tabela} ({string.Join(", ", colunas)}) VALUES ({string.Join(", ", colunas.Select(p => "@" + p))});";
-            sql += SQLTradutorFactory.ObterUltimoInsert();
+            sql += SQLTradutorFactory.ObterUltimoInsert(ConexaoAtiva);
 
             var result = connection.ExecuteScalar<int>(sql, parametros, transaction);
 
@@ -153,7 +161,7 @@ namespace JJ.Standard.Data.Extensoes
 
                 var valor = propriedade.GetValue(entity);
                 if (valor is DateTime dateTimeValue)
-                    valor = SQLTradutorFactory.TratarData(valor);
+                    valor = SQLTradutorFactory.TratarData(valor, ConexaoAtiva);
 
                 colunas.Add($"{propriedade.Name} = @{propriedade.Name}");
                 parametros.Add(propriedade.Name, valor);
@@ -192,10 +200,11 @@ namespace JJ.Standard.Data.Extensoes
             return connection.Execute(sqlDeletar, new { Id = id }, transaction);
         }
 
-        public static bool CriarTabela<T>(this IDbConnection connection, IDbTransaction transaction = null)
+        public static bool CriarTabela<T>(this IDbConnection connection, Conexao conexao, IDbTransaction transaction = null)
         {
             Type entityType = typeof(T);
             string tableName = entityType.Name;
+            ConexaoAtiva = conexao;
 
             StringBuilder createTableSql = new StringBuilder();
             createTableSql.Append($"CREATE TABLE {tableName} (");
@@ -212,12 +221,12 @@ namespace JJ.Standard.Data.Extensoes
 
                 Type propertyType = property.PropertyType;
                 string columnName = property.Name;
-                string columnType = SQLTradutorFactory.ObterTipoColuna(property);
+                string columnType = SQLTradutorFactory.ObterTipoColuna(property, ConexaoAtiva);
 
                 // Verificar se é Chave Primária
                 if (property.GetCustomAttribute<ChavePrimaria>() != null)
                 {
-                    columns.Add($"{columnName} {columnType} {SQLTradutorFactory.ObterSintaxeChavePrimaria()}");
+                    columns.Add($"{columnName} {columnType} {SQLTradutorFactory.ObterSintaxeChavePrimaria(ConexaoAtiva)}");
                 }
                 else
                 {
@@ -237,7 +246,7 @@ namespace JJ.Standard.Data.Extensoes
                 if (relacionamento != null)
                 {
                     // Adicionar a definição da chave estrangeira com o nome da chave primária referenciada
-                    string fk = SQLTradutorFactory.ObterSintaxeForeignKey(columnName, relacionamento.Tabela, relacionamento.ChavePrimaria);
+                    string fk = SQLTradutorFactory.ObterSintaxeForeignKey(ConexaoAtiva, columnName, relacionamento.Tabela, relacionamento.ChavePrimaria);
                     foreignKeys.Add(fk);
                 }
             }
@@ -265,10 +274,12 @@ namespace JJ.Standard.Data.Extensoes
             }
         }
 
-        public static bool CriarTabelas(this IDbConnection connection, string query, IDbTransaction transaction = null)
+        public static bool CriarTabelas(this IDbConnection connection, Conexao conexao, string query, IDbTransaction transaction = null)
         {
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentException("A query para criação das tabelas não pode ser nula ou vazia.");
+
+            ConexaoAtiva = conexao;
 
             var resultado = connection.Execute(query, transaction: transaction);
 

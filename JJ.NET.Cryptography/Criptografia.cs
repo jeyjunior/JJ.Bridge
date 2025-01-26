@@ -1,10 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using JJ.NET.Cryptography.AES;
+using JJ.NET.Cryptography.Enumerador;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
-using JJ.Standard.Cryptography.AES;
-using JJ.Standard.Cryptography.Enumerador;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace JJ.Standard.Cryptography
+namespace JJ.NET.Cryptography
 {
     /// <summary>
     /// Classe responsável por fornecer métodos para criptografar e descriptografar dados
@@ -102,9 +105,9 @@ namespace JJ.Standard.Cryptography
     /// </summary>
     public class CriptografarResult
     {
-        public string Valor { get; set; } 
-        public string IV { get; set; }    
-        public string Erro { get; set; }  
+        public string Valor { get; set; }
+        public string IV { get; set; }
+        public string Erro { get; set; }
     }
 
     /// <summary>
@@ -113,9 +116,9 @@ namespace JJ.Standard.Cryptography
     /// </summary>
     public class CriptografarRequest
     {
-        public TipoCriptografia TipoCriptografia { get; set; } 
-        public string Valor { get; set; } 
-        public string IV { get; set; }    
+        public TipoCriptografia TipoCriptografia { get; set; }
+        public string Valor { get; set; }
+        public string IV { get; set; }
     }
 
     /// <summary>
@@ -135,7 +138,7 @@ namespace JJ.Standard.Cryptography
     /// </summary>
     public class DescriptografarResult
     {
-        public string Valor { get; set; } 
-        public string Erro { get; set; }  
+        public string Valor { get; set; }
+        public string Erro { get; set; }
     }
 }

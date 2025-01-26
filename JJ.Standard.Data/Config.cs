@@ -20,20 +20,18 @@ namespace JJ.Standard.Data
         {
         }
 
-        private static void CarregarCaminhoArquivoParametros(string nomeAplicacao)
+        public static void Iniciar(ConfigRequest configRequest)
         {
-            string caminhoDiretorioAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            caminhoArquivos = Path.Combine(caminhoDiretorioAppData, nomeAplicacao);
-
-            arquivoParametros = Path.Combine(caminhoArquivos, "configuracoes.json");
+            CarregarCaminhoArquivoParametros(configRequest.NomeAplicacao, configRequest.CaminhoDestino);
+            CarregarParametros();
+            DefinirConexaoAtiva(configRequest.Conexao);
+            CarregarConfiguracoes();
         }
 
-        public static void Iniciar(Conexao conexao, string nomeAplicacao = "JeyJunior")
+        private static void CarregarCaminhoArquivoParametros(string caminhoDestino, string nomeAplicacao)
         {
-            CarregarCaminhoArquivoParametros(nomeAplicacao);
-            CarregarParametros();
-            DefinirConexaoAtiva(conexao);
-            CarregarConfiguracoes();
+            caminhoArquivos = Path.Combine(caminhoDestino, nomeAplicacao);
+            arquivoParametros = Path.Combine(caminhoArquivos, "configuracoes.json");
         }
 
         private static void CarregarParametros()

@@ -10,5 +10,9 @@ namespace JJ.Standard.Data.Enumerador
         SQLServer = 2,
         MySql = 3,
     }
-
+    public enum Plataforma
+    {
+        Android,
+        Desktop
+    }
 }

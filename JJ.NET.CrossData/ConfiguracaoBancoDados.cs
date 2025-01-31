@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using JJ.NET.Data.Enumerador;
-using JJ.NET.Data.DTO;
+using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using JJ.NET.CrossData.Enumerador;
+using JJ.NET.CrossData.DTO;
 
-namespace JJ.NET.Data
+namespace JJ.NET.CrossData
 {
     /// <summary>
     /// Classe responsável por carregar e gerenciar a configuração de conexões com os bancos de dados.

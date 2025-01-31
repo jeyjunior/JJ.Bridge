@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Data.DTO
+namespace JJ.NET.CrossData.DTO
 {
     public class Parametros
     {

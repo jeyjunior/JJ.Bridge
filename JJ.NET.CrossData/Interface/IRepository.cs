@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JJ.NET.CrossData.Enumerador;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace JJ.NET.CrossData.Interface
 {
     public interface IRepository<TEntity> : IDisposable where TEntity : class
     {
+        Conexao Conexao { get; set; }
         TEntity Obter(int id);
         IEnumerable<TEntity> ObterLista(string condition = "", object parameters = null);
         int Adicionar(TEntity entity);

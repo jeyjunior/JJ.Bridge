@@ -14,9 +14,9 @@ namespace JJ.NET.Data
         private IDbTransaction _transaction;
         private bool _disposed;
 
-        public UnitOfWork()
+        public UnitOfWork(IDbConnection dbConnection)
         {
-            _connection = ConfiguracaoBancoDados.ObterConexao();
+            _connection = dbConnection; 
         }
 
         public IDbConnection Connection => _connection;

@@ -11,11 +11,11 @@ namespace JJ.NET.CrossData.Dicionario
 {
     public static class SQLTradutorFactory
     {
-        public static string ObterUltimoInsert(Conexao conexao)
+        public static string ObterUltimoInsert()
         {
             string query = "";
 
-            switch (conexao)
+            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
             {
                 case Conexao.SQLite: query = "SELECT last_insert_rowid();"; break;
                 case Conexao.SQLServer: query = "SELECT SCOPE_IDENTITY();"; break;
@@ -25,11 +25,11 @@ namespace JJ.NET.CrossData.Dicionario
             return query;
         }
 
-        public static object TratarData(object value, Conexao conexao)
+        public static object TratarData(object value)
         {
             DateTime dateTimeValue = (DateTime)value;
 
-            switch (conexao)
+            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
             {
                 case Conexao.SQLite:
                 case Conexao.MySql:
@@ -41,9 +41,9 @@ namespace JJ.NET.CrossData.Dicionario
             return dateTimeValue;
         }
 
-        public static string ObterSintaxeChavePrimaria(Conexao conexao)
+        public static string ObterSintaxeChavePrimaria()
         {
-            switch (conexao)
+            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
             {
                 case Conexao.SQLite:
                     return "PRIMARY KEY AUTOINCREMENT";
@@ -56,9 +56,9 @@ namespace JJ.NET.CrossData.Dicionario
             }
         }
 
-        public static string ObterSintaxeForeignKey(Conexao conexao, string columnName, string tabelaReferenciada, string chavePrimaria)
+        public static string ObterSintaxeForeignKey(string columnName, string tabelaReferenciada, string chavePrimaria)
         {
-            switch (conexao)
+            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
             {
                 case Conexao.SQLite:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
@@ -71,7 +71,7 @@ namespace JJ.NET.CrossData.Dicionario
             }
         }
 
-        public static string ObterTipoColuna(PropertyInfo propriedade, Conexao conexao)
+        public static string ObterTipoColuna(PropertyInfo propriedade)
         {
             Type propertyType = Nullable.GetUnderlyingType(propriedade.PropertyType) ?? propriedade.PropertyType;
 
@@ -110,7 +110,7 @@ namespace JJ.NET.CrossData.Dicionario
                     throw new ArgumentException($"Tipo de propriedade não suportado: {propriedade.PropertyType.Name}");
             }
 
-            switch (conexao)
+            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
             {
                 case Conexao.SQLite:
                     if (propertyType == typeof(bool))
@@ -141,7 +141,7 @@ namespace JJ.NET.CrossData.Dicionario
                     throw new InvalidOperationException("Banco de dados não suportado para tipos de dados.");
             }
 
-            if (conexao == Conexao.MySql || conexao == Conexao.SQLServer)
+            if (ConfiguracaoBancoDados.TipoConexaoSelecionada == Conexao.MySql || ConfiguracaoBancoDados.TipoConexaoSelecionada == Conexao.SQLServer)
             {
                 if (propertyType == typeof(string))
                 {

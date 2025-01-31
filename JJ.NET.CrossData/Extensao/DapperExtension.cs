@@ -14,21 +14,14 @@ namespace JJ.NET.CrossData.Extensao
 {
     public static class DapperExtension
     {
-        public static Conexao ConexaoAtiva { get; private set; }    
-
-        public static void DefinirConexaoAtiva(this IDbConnection dbConnection, Conexao conexao)
-        {
-            ConexaoAtiva = conexao;
-        }
-
-        public static bool VerificarTabelaExistente<T>(this IDbConnection connection, Conexao conexao)
+        public static bool VerificarTabelaExistente<T>(this IDbConnection connection)
         {
             Type entidade = typeof(T);
             string tabela = entidade.Name;
 
             string query = "";
 
-            switch (conexao)
+            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
             {
                 case Conexao.SQLite:
                     query = $"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{tabela}';";
@@ -113,17 +106,16 @@ namespace JJ.NET.CrossData.Extensao
                 if (propriedade.GetCustomAttribute<Obrigatorio>() != null && propriedade.GetValue(entity) == null)
                     throw new InvalidOperationException($"A propriedade {propriedade.Name} é obrigatória e não foi preenchida.");
 
-
                 var valor = propriedade.GetValue(entity);
                 if (valor is DateTime dateTimeValue)
-                    valor = SQLTradutorFactory.TratarData(valor, ConexaoAtiva);
+                    valor = SQLTradutorFactory.TratarData(valor);
 
                 colunas.Add($"{propriedade.Name}");
                 parametros.Add(propriedade.Name, valor);
             }
 
             string sql = $"INSERT INTO {tabela} ({string.Join(", ", colunas)}) VALUES ({string.Join(", ", colunas.Select(p => "@" + p))});";
-            sql += SQLTradutorFactory.ObterUltimoInsert(ConexaoAtiva);
+            sql += SQLTradutorFactory.ObterUltimoInsert();
 
             var result = connection.ExecuteScalar<int>(sql, parametros, transaction);
 
@@ -161,7 +153,7 @@ namespace JJ.NET.CrossData.Extensao
 
                 var valor = propriedade.GetValue(entity);
                 if (valor is DateTime dateTimeValue)
-                    valor = SQLTradutorFactory.TratarData(valor, ConexaoAtiva);
+                    valor = SQLTradutorFactory.TratarData(valor);
 
                 colunas.Add($"{propriedade.Name} = @{propriedade.Name}");
                 parametros.Add(propriedade.Name, valor);
@@ -200,11 +192,10 @@ namespace JJ.NET.CrossData.Extensao
             return connection.Execute(sqlDeletar, new { Id = id }, transaction);
         }
 
-        public static bool CriarTabela<T>(this IDbConnection connection, Conexao conexao, IDbTransaction transaction = null)
+        public static bool CriarTabela<T>(this IDbConnection connection, IDbTransaction transaction = null)
         {
             Type entityType = typeof(T);
             string tableName = entityType.Name;
-            ConexaoAtiva = conexao;
 
             StringBuilder createTableSql = new StringBuilder();
             createTableSql.Append($"CREATE TABLE {tableName} (");
@@ -221,12 +212,12 @@ namespace JJ.NET.CrossData.Extensao
 
                 Type propertyType = property.PropertyType;
                 string columnName = property.Name;
-                string columnType = SQLTradutorFactory.ObterTipoColuna(property, ConexaoAtiva);
+                string columnType = SQLTradutorFactory.ObterTipoColuna(property);
 
                 // Verificar se é Chave Primária
                 if (property.GetCustomAttribute<ChavePrimaria>() != null)
                 {
-                    columns.Add($"{columnName} {columnType} {SQLTradutorFactory.ObterSintaxeChavePrimaria(ConexaoAtiva)}");
+                    columns.Add($"{columnName} {columnType} {SQLTradutorFactory.ObterSintaxeChavePrimaria()}");
                 }
                 else
                 {
@@ -246,7 +237,7 @@ namespace JJ.NET.CrossData.Extensao
                 if (relacionamento != null)
                 {
                     // Adicionar a definição da chave estrangeira com o nome da chave primária referenciada
-                    string fk = SQLTradutorFactory.ObterSintaxeForeignKey(ConexaoAtiva, columnName, relacionamento.Tabela, relacionamento.ChavePrimaria);
+                    string fk = SQLTradutorFactory.ObterSintaxeForeignKey(columnName, relacionamento.Tabela, relacionamento.ChavePrimaria);
                     foreignKeys.Add(fk);
                 }
             }
@@ -274,12 +265,10 @@ namespace JJ.NET.CrossData.Extensao
             }
         }
 
-        public static bool CriarTabelas(this IDbConnection connection, Conexao conexao, string query, IDbTransaction transaction = null)
+        public static bool CriarTabelas(this IDbConnection connection,  string query, IDbTransaction transaction = null)
         {
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentException("A query para criação das tabelas não pode ser nula ou vazia.");
-
-            ConexaoAtiva = conexao;
 
             var resultado = connection.Execute(query, transaction: transaction);
 

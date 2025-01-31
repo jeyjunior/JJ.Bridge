@@ -12,4 +12,9 @@ namespace JJ.NET.CrossData.Enumerador
         SQLServer = 2,
         MySql = 3,
     }
+    public enum Plataforma
+    {
+        Android,
+        Desktop
+    }
 }

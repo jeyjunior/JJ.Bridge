@@ -11,31 +11,6 @@ namespace JJ.NET.Core.Extensoes
     public static class StringExtension
     {
         /// <summary>
-        /// Retorna o valor da string ou o valor padrão se a string for nula ou estiver em branco.
-        /// </summary>
-        /// <param name="valor">A string a ser verificada.</param>
-        /// <param name="padrao">O valor padrão a ser retornado caso a string seja nula ou em branco.</param>
-        /// <returns>O valor da string ou o valor padrão.</returns>
-        public static string ObterValorOuPadrao(this string valor, string padrao)
-        {
-            return string.IsNullOrWhiteSpace(valor) ? padrao : valor;
-        }
-
-        /// <summary>
-        /// Retorna o valor da string convertido para um inteiro ou o valor padrão se a string for nula ou em branco.
-        /// </summary>
-        /// <param name="valor">A string a ser convertida.</param>
-        /// <param name="padrao">O valor inteiro padrão a ser retornado caso a string seja nula ou não possa ser convertida.</param>
-        /// <returns>O valor convertido para inteiro ou o valor padrão.</returns>
-        public static int ObterValorOuPadrao(this string valor, int padrao)
-        {
-            if (string.IsNullOrWhiteSpace(valor))
-                return padrao;
-
-            return valor.ConverterParaInt32();
-        }
-
-        /// <summary>
         /// Formata o valor de uma string representando um saldo, aplicando a formatação numérica de acordo com a cultura fornecida.
         /// </summary>
         /// <param name="valor">A string representando o valor do saldo.</param>
@@ -43,7 +18,7 @@ namespace JJ.NET.Core.Extensoes
         /// <returns>A string formatada conforme a cultura.</returns>
         public static string FormatarSaldo(this string valor, CultureInfo cultureInfo)
         {
-            if (ObterValorOuPadrao(valor, "").Trim() == "")
+            if (valor.ObterValorOuPadrao("").Trim() != "")
                 return valor;
 
             if (decimal.TryParse(valor, out decimal decimalValue))
@@ -71,7 +46,7 @@ namespace JJ.NET.Core.Extensoes
         /// <returns>A string limitada ao tamanho especificado.</returns>
         public static string LimitarTamanho(this string valor, int limite)
         {
-            if (ObterValorOuPadrao(valor, "").Trim() == "")
+            if (valor.ObterValorOuPadrao("").Trim() != "")
                 return valor;
 
             return (valor.Length > limite) ? valor.Substring(0, limite) : valor;
@@ -85,7 +60,7 @@ namespace JJ.NET.Core.Extensoes
         /// <returns>A string com o valor monetário seguido pelo símbolo da moeda.</returns>
         public static string AtribuirSimboloMonetario(this string valor, CultureInfo cultureInfo)
         {
-            if (ObterValorOuPadrao(valor, "").Trim() == "")
+            if (valor.ObterValorOuPadrao("").Trim() != "")
                 return valor;
 
             return $"{valor} ({cultureInfo.NumberFormat.CurrencySymbol})";
@@ -98,7 +73,7 @@ namespace JJ.NET.Core.Extensoes
         /// <returns>A string com a primeira letra em maiúscula.</returns>
         public static string PrimeiraLetraMaiuscula(this string valor)
         {
-            if (ObterValorOuPadrao(valor, "").Trim() == "")
+            if (valor.ObterValorOuPadrao("").Trim() != "")
                 return valor;
 
             return char.ToUpper(valor[0]) + valor.Substring(1);
@@ -166,14 +141,14 @@ namespace JJ.NET.Core.Extensoes
         /// Substitui os caracteres de uma string por um caractere específico, geralmente utilizado para ocultar senhas.
         /// </summary>
         /// <param name="input">A string a ser modificada.</param>
-        /// <param name="passwordChar">O caractere que substituirá os caracteres da string (por padrão, '*').</param>
+        /// <param name="caracterOculto">O caractere que substituirá os caracteres da string (por padrão, '*').</param>
         /// <returns>A string com os caracteres substituídos pelo caractere especificado.</returns>
-        public static string PasswordChar(this string input, char passwordChar = '*')
+        public static string Ocultar(this string input, char caracterOculto = '*')
         {
             if (input.ObterValorOuPadrao("").Trim() == "")
                 return "";
 
-            return new string(passwordChar, input.Length);
+            return new string(caracterOculto, input.Length);
         }
 
         /// <summary>

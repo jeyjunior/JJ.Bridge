@@ -9,6 +9,6 @@ namespace JJ.NET.Core.DTO
     public class Item
     {
         public string ID { get; set; }
-        public string Nome { get; set; }
+        public string Valor { get; set; }
     }
 }

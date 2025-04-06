@@ -1,11 +1,11 @@
-﻿using JJ.NET.Cryptography.AES;
-using JJ.NET.Cryptography.Enumerador;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
+using JJ.NET.Cryptography.AES;
+using JJ.NET.Cryptography.Enumerador;
 
 namespace JJ.NET.Cryptography
 {
@@ -22,19 +22,19 @@ namespace JJ.NET.Cryptography
         /// <param name="criptografarRequest">Objeto contendo as informações necessárias para criptografar os dados.</param>
         /// <returns>Resultado da criptografia, incluindo o valor criptografado, o IV e mensagens de erro se houverem.</returns>
         /// <exception cref="NotImplementedException">Caso um algoritmo não implementado seja solicitado.</exception>
-        public static CriptografarResult Criptografar(CriptografarRequest criptografarRequest)
+        public static CriptografiaResult Criptografar(CriptografiaRequest criptografiaRequest)
         {
             // Resultado inicial com valores vazios
-            var result = new CriptografarResult() { Valor = "", IV = "", Erro = "" };
+            var result = new CriptografiaResult() { Valor = "", IV = "", Erro = "" };
 
             try
             {
-                switch (criptografarRequest.TipoCriptografia)
+                switch (criptografiaRequest.TipoCriptografia)
                 {
-                    case TipoCriptografia.AES: result = CriptografiaAES.Criptografar(criptografarRequest); break;
+                    case TipoCriptografia.AES: result = CriptografiaAES.Criptografar(criptografiaRequest); break;
                     case TipoCriptografia.RSA: break;
                     case TipoCriptografia.DES: break;
-                    default: throw new NotImplementedException($"Algoritmo de criptografia {criptografarRequest.TipoCriptografia} não implementado.");
+                    default: throw new NotImplementedException($"Algoritmo de criptografia {criptografiaRequest.TipoCriptografia} não implementado.");
                 }
             }
             catch (CryptographicException ex)
@@ -64,18 +64,18 @@ namespace JJ.NET.Cryptography
         /// <param name="descriptografarRequest">Objeto contendo as informações necessárias para descriptografar os dados.</param>
         /// <returns>Resultado da descriptografia, incluindo o valor descriptografado e mensagens de erro se houverem.</returns>
         /// <exception cref="NotImplementedException">Caso um algoritmo não implementado seja solicitado.</exception>
-        public static DescriptografarResult Descriptografar(DescriptografarRequest descriptografarRequest)
+        public static CriptografiaResult Descriptografar(CriptografiaRequest criptografiaRequest)
         {
-            var result = new DescriptografarResult { Valor = "", Erro = "" };
+            var result = new CriptografiaResult { Valor = "", Erro = "" };
 
             try
             {
-                switch (descriptografarRequest.TipoCriptografia)
+                switch (criptografiaRequest.TipoCriptografia)
                 {
-                    case TipoCriptografia.AES: result = CriptografiaAES.Descriptografar(descriptografarRequest); break;
+                    case TipoCriptografia.AES: result = CriptografiaAES.Descriptografar(criptografiaRequest); break;
                     case TipoCriptografia.RSA: break;
                     case TipoCriptografia.DES: break;
-                    default: throw new NotImplementedException($"Algoritmo de criptografia {descriptografarRequest.TipoCriptografia} não implementado.");
+                    default: throw new NotImplementedException($"Algoritmo de criptografia {criptografiaRequest.TipoCriptografia} não implementado.");
                 }
             }
             catch (CryptographicException ex)
@@ -103,7 +103,7 @@ namespace JJ.NET.Cryptography
     /// Resultado da operação de criptografia.
     /// Contém o valor criptografado, o IV (vetor de inicialização) e uma mensagem de erro, se houver.
     /// </summary>
-    public class CriptografarResult
+    public class CriptografiaResult
     {
         public string Valor { get; set; }
         public string IV { get; set; }
@@ -114,31 +114,10 @@ namespace JJ.NET.Cryptography
     /// Dados necessários para realizar uma operação de criptografia.
     /// Contém o tipo de criptografia, o valor a ser criptografado e o IV (se necessário).
     /// </summary>
-    public class CriptografarRequest
+    public class CriptografiaRequest
     {
         public TipoCriptografia TipoCriptografia { get; set; }
         public string Valor { get; set; }
         public string IV { get; set; }
-    }
-
-    /// <summary>
-    /// Dados necessários para realizar uma operação de descriptografia.
-    /// Contém o tipo de criptografia, o valor a ser descriptografado e o IV (se necessário).
-    /// </summary>
-    public class DescriptografarRequest
-    {
-        public TipoCriptografia TipoCriptografia { get; set; } // Tipo de criptografia utilizada
-        public string Valor { get; set; } // Valor a ser descriptografado
-        public string IV { get; set; }    // Vetor de inicialização (se necessário)
-    }
-
-    /// <summary>
-    /// Resultado da operação de descriptografia.
-    /// Contém o valor descriptografado e uma mensagem de erro, se houver.
-    /// </summary>
-    public class DescriptografarResult
-    {
-        public string Valor { get; set; }
-        public string Erro { get; set; }
     }
 }

@@ -9,9 +9,9 @@ namespace JJ.NET.Cryptography.AES
 {
     internal static class CriptografiaAES
     {
-        public static CriptografarResult Criptografar(CriptografarRequest criptografarRequest)
+        public static CriptografiaResult Criptografar(CriptografiaRequest criptografarRequest)
         {
-            var criptografiaResult = new CriptografarResult();
+            var criptografiaResult = new CriptografiaResult();
 
             using (Aes aesAlg = Aes.Create())
             {
@@ -43,18 +43,18 @@ namespace JJ.NET.Cryptography.AES
             return criptografiaResult;
         }
 
-        public static DescriptografarResult Descriptografar(DescriptografarRequest descriptografarRequest)
+        public static CriptografiaResult Descriptografar(CriptografiaRequest criptografiaRequest)
         {
-            var result = new DescriptografarResult { Valor = "", Erro = "" };
+            var result = new CriptografiaResult { Valor = "", Erro = "" };
 
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = ObterChaveAES();
-                aesAlg.IV = Convert.FromBase64String(descriptografarRequest.IV);
+                aesAlg.IV = Convert.FromBase64String(criptografiaRequest.IV);
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(descriptografarRequest.Valor)))
+                using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(criptografiaRequest.Valor)))
                 {
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {

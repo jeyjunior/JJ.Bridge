@@ -214,6 +214,8 @@ namespace JJ.NET.CrossData.Extensao
                 string columnName = property.Name;
                 string columnType = SQLTradutorFactory.ObterTipoColuna(property);
 
+                bool ehObrigatorio = true;
+
                 // Verificar se é Chave Primária
                 if (property.GetCustomAttribute<ChavePrimaria>() != null)
                 {
@@ -229,6 +231,7 @@ namespace JJ.NET.CrossData.Extensao
                     else
                     {
                         columns.Add($"{columnName} {columnType}");
+                        ehObrigatorio = false;
                     }
                 }
 
@@ -238,6 +241,10 @@ namespace JJ.NET.CrossData.Extensao
                 {
                     // Adicionar a definição da chave estrangeira com o nome da chave primária referenciada
                     string fk = SQLTradutorFactory.ObterSintaxeForeignKey(columnName, relacionamento.Tabela, relacionamento.ChavePrimaria);
+                    
+                    if (!ehObrigatorio)
+                        fk += " ON DELETE SET NULL";
+
                     foreignKeys.Add(fk);
                 }
             }

@@ -37,5 +37,13 @@ namespace JJ.NET.Core.Validador
 
             _erros.Remove(erro);
         }
+
+        public string ObterPrimeiroErro()
+        {
+            if(_erros.Count > 0)
+                return _erros[0];
+
+            return "";
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -79,19 +80,46 @@ namespace JJ.NET.Cryptography.AES
 
         private static string ObterChave()
         {
-            var localFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var arquivoKeyMaster = Path.Combine(localFolder, "_yekretsam.txt");
+            var caminho = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cclrf.dat");
+            var chave = LerChaveLocal(caminho);
 
-            if (File.Exists(arquivoKeyMaster))
+            if (string.IsNullOrWhiteSpace(chave))
             {
-                string guidString = File.ReadAllText(arquivoKeyMaster);
-                return Guid.Parse(guidString).ToString();
+                chave = Guid.NewGuid().ToString();
+                SalvarChaveLocal(chave, caminho);
             }
-            else
+
+            return chave;
+        }
+
+        private static void SalvarChaveLocal(string chave, string caminho)
+        {
+            try
             {
-                Guid novoGuid = Guid.NewGuid();
-                File.WriteAllText(arquivoKeyMaster, novoGuid.ToString());
-                return novoGuid.ToString();
+                byte[] dados = Encoding.UTF8.GetBytes(chave);
+                byte[] dadosCriptografados = ProtectedData.Protect(dados, null, DataProtectionScope.CurrentUser);
+                File.WriteAllBytes(caminho, dadosCriptografados);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao salvar a chave mestra: " + ex.Message);
+            }
+        }
+
+        private static string LerChaveLocal(string caminho)
+        {
+            try
+            {
+                if (!File.Exists(caminho))
+                    return "";
+
+                byte[] dadosCriptografados = File.ReadAllBytes(caminho);
+                byte[] dados = ProtectedData.Unprotect(dadosCriptografados, null, DataProtectionScope.CurrentUser);
+                return Encoding.UTF8.GetString(dados);
+            }
+            catch
+            {
+                return "";
             }
         }
     }

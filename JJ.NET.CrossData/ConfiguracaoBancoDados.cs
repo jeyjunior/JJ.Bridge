@@ -27,7 +27,7 @@ namespace JJ.NET.CrossData
         /// <param name="tipoConexao">Tipo de conexão selecionado.</param>
         /// <param name="nomeAplicacao">Nome da aplicação para organizar os arquivos de configuração.</param>
         /// <param name="caminhoDestino">Caminho de destino para os arquivos de configuração.</param>
-        public static void IniciarConfiguracao(Conexao tipoConexao, string nomeAplicacao, string caminhoDestino)
+        public static void IniciarConfiguracao(Conexao tipoConexao, string caminhoDestino, string nomeAplicacao = "dbstd")
         {
             DefinirCaminhoArquivoConfiguracoes(nomeAplicacao, caminhoDestino);
             CarregarParametrosBancoDados();
@@ -200,6 +200,67 @@ namespace JJ.NET.CrossData
         {
             string connString = ConfiguracaoAtual.BaseDados.FirstOrDefault(i => i.ID == 3).Valor.ToString();
             return new MySqlConnector.MySqlConnection(connString);
+        }
+
+        /// <summary>
+        /// Exclui todos os arquivos na pasta de configuração ou arquivos específicos.
+        /// </summary>
+        /// <param name="excluirApenasBancoDados">Se true, exclui apenas o arquivo do banco de dados SQLite. Se false, exclui todos os arquivos da pasta.</param>
+        /// <param name="excluirConfiguracoes">Se true, exclui também o arquivo de configurações (ignorado se excluirApenasBancoDados for true).</param>
+        public static void LimparPastaConfiguracao(bool excluirApenasBancoDados = false, bool excluirConfiguracoes = false)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_diretorioArquivosConfig) || !Directory.Exists(_diretorioArquivosConfig))
+                    return;
+
+                if (excluirApenasBancoDados)
+                {
+                    var sqliteConfig = ConfiguracaoAtual?.BaseDados?.FirstOrDefault(i => i.ID == 1);
+                    if (sqliteConfig != null && File.Exists(sqliteConfig.Valor))
+                    {
+                        File.Delete(sqliteConfig.Valor);
+                    }
+                }
+                else
+                {
+                    var files = Directory.GetFiles(_diretorioArquivosConfig);
+                    foreach (var file in files)
+                    {
+                        if (!excluirConfiguracoes && file.Equals(_caminhoArquivoConfiguracoes, StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        File.Delete(file);
+                    }
+
+                    if (excluirConfiguracoes && File.Exists(_caminhoArquivoConfiguracoes))
+                    {
+                        File.Delete(_caminhoArquivoConfiguracoes);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao limpar pasta de configuração: " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// Exclui completamente a pasta de configuração com todos os seus arquivos e subdiretórios.
+        /// </summary>
+        public static void ExcluirPastaConfiguracaoCompleta()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_diretorioArquivosConfig) || !Directory.Exists(_diretorioArquivosConfig))
+                    return;
+
+                Directory.Delete(_diretorioArquivosConfig, true);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao excluir pasta de configuração: " + ex.Message, ex);
+            }
         }
     }
 }

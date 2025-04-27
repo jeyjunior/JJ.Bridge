@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JJ.NET.Cryptography.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -81,46 +82,25 @@ namespace JJ.NET.Cryptography.AES
         private static string ObterChave()
         {
             var caminho = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cclrf.dat");
-            var chave = LerChaveLocal(caminho);
+            string chave = "";
 
-            if (string.IsNullOrWhiteSpace(chave))
+            if (!File.Exists(caminho))
             {
                 chave = Guid.NewGuid().ToString();
-                SalvarChaveLocal(chave, caminho);
+                byte[] dados = Encoding.UTF8.GetBytes(chave);
+                byte[] dadosCriptografados = DpapiHelper.Protect(dados);
+                //byte[] dadosCriptografados = ProtectedData.Protect(dados, null, DataProtectionScope.CurrentUser);
+                File.WriteAllBytes(caminho, dadosCriptografados);
+            }
+            else
+            {
+                byte[] dadosCriptografados = File.ReadAllBytes(caminho);
+                byte[] dados = DpapiHelper.Unprotect(dadosCriptografados);
+                //byte[] dados = ProtectedData.Unprotect(dadosCriptografados, null, DataProtectionScope.CurrentUser);
+                chave = Encoding.UTF8.GetString(dados);
             }
 
             return chave;
-        }
-
-        private static void SalvarChaveLocal(string chave, string caminho)
-        {
-            try
-            {
-                byte[] dados = Encoding.UTF8.GetBytes(chave);
-                byte[] dadosCriptografados = ProtectedData.Protect(dados, null, DataProtectionScope.CurrentUser);
-                File.WriteAllBytes(caminho, dadosCriptografados);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao salvar a chave mestra: " + ex.Message);
-            }
-        }
-
-        private static string LerChaveLocal(string caminho)
-        {
-            try
-            {
-                if (!File.Exists(caminho))
-                    return "";
-
-                byte[] dadosCriptografados = File.ReadAllBytes(caminho);
-                byte[] dados = ProtectedData.Unprotect(dadosCriptografados, null, DataProtectionScope.CurrentUser);
-                return Encoding.UTF8.GetString(dados);
-            }
-            catch
-            {
-                return "";
-            }
         }
     }
 }

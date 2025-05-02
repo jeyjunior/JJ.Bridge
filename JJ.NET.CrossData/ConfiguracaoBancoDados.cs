@@ -16,7 +16,7 @@ namespace JJ.NET.CrossData
     {
         private static string _diretorioArquivosConfig = string.Empty;
         private static string _caminhoArquivoConfiguracoes;
-        public static Conexao TipoConexaoSelecionada { get; private set; }
+        public static Conexao TipoConexaoSelecionada { get; private set; } = Conexao.SQLite;
         public static Parametros ConfiguracaoAtual { get; private set; } = null;
 
         static ConfiguracaoBancoDados() { }

@@ -81,7 +81,8 @@ namespace JJ.NET.Cryptography.AES
 
         private static string ObterChave()
         {
-            var caminho = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cclrf.dat");
+            var caminho = Path.Combine(Path.GetTempPath(), "cclrf.dat");
+            //var caminho = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cclrf.dat");
             string chave = "";
 
             if (!File.Exists(caminho))

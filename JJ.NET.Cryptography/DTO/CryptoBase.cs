@@ -17,6 +17,13 @@ namespace JJ.NET.Cryptography.DTO
 
     public class DescriptografiaRequest : CryptoBase
     {
+        public int IDUsuario { get; set; }
+    }
 
+    public class KMEntry
+    {
+        public Guid UUID { get; set; }
+        public int IDUsuario { get; set; }
+        public string KM { get; set; }
     }
 }

@@ -9,9 +9,9 @@ namespace JJ.NET.Cryptography.Interfaces
 {
     public interface ISeguranca
     {
-        string GerarChavePrincipal();
-        string RegistrarChavePrincipal(string km);
-        CriptografiaResult Criptografar(string valor);
+        string GerarChavePrincipal(int idUsuario);
+        bool ValidarChavePrincipal(string chavePrincipal);
+        CriptografiaResult Criptografar(string valor, int idUsuario);
         string Descriptografar(DescriptografiaRequest request);
     }
 }

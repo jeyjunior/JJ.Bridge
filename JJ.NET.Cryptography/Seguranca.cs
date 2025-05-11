@@ -12,7 +12,7 @@ namespace JJ.NET.Cryptography
 {
     public class Seguranca :  ISeguranca
     {
-        private const string KMFileName = "cclrf.dat";
+        private const string KMFileName = "cclrf.json";
         private readonly string KMPath = Path.Combine(Path.GetTempPath(), KMFileName);
         private const int KeySizeInBits = 256; // 256 bits = 32 bytes
         private const int KeySizeInBytes = KeySizeInBits / 8; // 32 bytes
@@ -38,11 +38,11 @@ namespace JJ.NET.Cryptography
                 rng.GetBytes(kmBytes);
                 var km = Convert.ToBase64String(kmBytes);
 
-                var lista = LerKMCriptografado();
+                var lista = LerChavePrincipal();
 
-                var kmEntry = new KMEntry { UUID = new Guid(), IDUsuario = idUsuario, KM = km };
+                var kmEntry = new KMEntry { UUID = Guid.NewGuid(), IDUsuario = idUsuario, KM = km };
                 lista.Add(kmEntry);
-                SalvarKMCriptografado(lista);
+                SalvarChavePrincpal(lista);
 
                 kmConcatenado = kmEntry.UUID + ":" + kmEntry.IDUsuario + ":" + kmEntry.KM;
 
@@ -66,7 +66,7 @@ namespace JJ.NET.Cryptography
 
             string km = partes[2];
 
-            var lista = LerKMCriptografado();
+            var lista = LerChavePrincipal();
 
             return lista.Any(e =>
                 e.UUID == uuid &&
@@ -75,7 +75,7 @@ namespace JJ.NET.Cryptography
         }
         private byte[] ObterKM(int idUsuario)
         {
-            var lista = LerKMCriptografado();
+            var lista = LerChavePrincipal();
 
             var kmEncontrado = lista.FirstOrDefault(i => i.IDUsuario == idUsuario);
 
@@ -84,7 +84,6 @@ namespace JJ.NET.Cryptography
 
             return Convert.FromBase64String(kmEncontrado.KM);
         }
-
         public CriptografiaResult Criptografar(string valor, int idUsuario)
         {
             var km = ObterKM(idUsuario);
@@ -156,51 +155,18 @@ namespace JJ.NET.Cryptography
                 }
             }
         }
-        private void SalvarKMCriptografado(List<KMEntry> kMs)
+        private void SalvarChavePrincpal(List<KMEntry> kMs)
         {
-            var json = JsonSerializer.Serialize(kMs);
-            var plainBytes = Encoding.UTF8.GetBytes(json);
-
-            using (var aes = Aes.Create())
-            {
-                aes.Key = ObterChaveFixaParaKM();
-                aes.GenerateIV();
-
-                using var ms = new MemoryStream();
-                ms.Write(aes.IV, 0, aes.IV.Length);
-
-                using var cs = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write);
-                cs.Write(plainBytes, 0, plainBytes.Length);
-                cs.FlushFinalBlock();
-
-                File.WriteAllBytes(KMPath, ms.ToArray());
-            }
+            var json = JsonSerializer.Serialize(kMs, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(KMPath, json);
         }
-        private List<KMEntry> LerKMCriptografado()
+        private List<KMEntry> LerChavePrincipal()
         {
             if (!File.Exists(KMPath))
                 return new List<KMEntry>();
 
-            var data = File.ReadAllBytes(KMPath);
-
-            using var aes = Aes.Create();
-            aes.Key = ObterChaveFixaParaKM();
-
-            var iv = data.Take(16).ToArray();
-            var cipher = data.Skip(16).ToArray();
-            aes.IV = iv;
-
-            using var ms = new MemoryStream(cipher);
-            using var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read);
-            using var sr = new StreamReader(cs);
-
-            var json = sr.ReadToEnd();
-            return JsonSerializer.Deserialize<List<KMEntry>>(json);
-        }
-        private byte[] ObterChaveFixaParaKM()
-        {
-            var chave = "B7g@x!92aBc#Vf5$1xZkLm8*7qQw3pPl";
-            return Encoding.UTF8.GetBytes(chave);
+            var json = File.ReadAllText(KMPath);
+            return JsonSerializer.Deserialize<List<KMEntry>>(json) ?? new List<KMEntry>();
         }
     }
 }

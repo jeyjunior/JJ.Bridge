@@ -61,6 +61,15 @@ namespace JJ.NET.Core.Extensoes
             if (valor == null || valor == DBNull.Value)
                 return padrao;
 
+            if (typeof(T) == typeof(string))
+            {
+                if (valor is string strValor && string.IsNullOrWhiteSpace(strValor) &&
+                    padrao is string strPadrao && !string.IsNullOrWhiteSpace(strPadrao))
+                {
+                    return padrao;
+                }
+            }
+
             try
             {
                 if (valor is T convertido)

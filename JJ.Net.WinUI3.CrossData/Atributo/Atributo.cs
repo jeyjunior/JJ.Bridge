@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.CrossData.Atributo
+namespace JJ.Net.WinUI3.CrossData.Atributo
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class ChavePrimaria : Attribute

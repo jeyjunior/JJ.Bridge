@@ -13,11 +13,16 @@ namespace JJ.NET.Cryptography
     public class Seguranca :  ISeguranca
     {
         private const string KMFileName = "cclrf.json";
-        private readonly string KMPath = Path.Combine(Path.GetTempPath(), KMFileName);
+        private readonly string KMPath = "";
         private const int KeySizeInBits = 256; // 256 bits = 32 bytes
         private const int KeySizeInBytes = KeySizeInBits / 8; // 32 bytes
         private const int SaltSize = 32; // 32 bytes = 256 bits
         private const int Iterations = 100000;
+
+        public Seguranca(string pastaArmazenamentoSistema)
+        {
+            KMPath = pastaArmazenamentoSistema;
+        }
 
         private string GerarSalt()
         {

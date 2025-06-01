@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Core.Extensoes
+namespace JJ.Net.Core.Extensoes
 {
     public static class ObjectExtension
     {
@@ -141,6 +141,3 @@ namespace JJ.NET.Core.Extensoes
         }
     }
 }
-
-
-

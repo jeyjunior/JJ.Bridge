@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Data.Interfaces
+namespace JJ.Net.Data.Interfaces
 {
     public interface IUnitOfWork
     {

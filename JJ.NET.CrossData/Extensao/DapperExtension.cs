@@ -1,20 +1,22 @@
-﻿using System;
+﻿using Dapper;
+using JJ.Net.CrossData.Atributo;
+using JJ.Net.CrossData.Dicionario;
+using JJ.Net.CrossData.DTO;
+using JJ.Net.CrossData.Enumerador;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper;
-using JJ.NET.CrossData.Atributo;
-using JJ.NET.CrossData.Dicionario;
-using JJ.NET.CrossData.DTO;
-using JJ.NET.CrossData.Enumerador;
 
-namespace JJ.NET.CrossData.Extensao
+namespace JJ.Net.CrossData.Extensao
 {
     public static class DapperExtension
     {
+        public static TipoBancoDados TipoBancoDados { get; set; }
+
         public static bool VerificarTabelaExistente<T>(this IDbConnection connection)
         {
             Type entidade = typeof(T);
@@ -22,17 +24,17 @@ namespace JJ.NET.CrossData.Extensao
 
             string query = "";
 
-            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
+            switch (TipoBancoDados)
             {
-                case Conexao.SQLite:
+                case TipoBancoDados.SQLite:
                     query = $"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{tabela}';";
                     break;
 
-                case Conexao.SQLServer:
+                case TipoBancoDados.SQLServer:
                     query = $"SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tabela}'";
                     break;
 
-                case Conexao.MySql:
+                case TipoBancoDados.MySQL:
                     query = $"SELECT count(*) FROM information_schema.tables WHERE table_name = '{tabela}'";
                     break;
 
@@ -52,9 +54,9 @@ namespace JJ.NET.CrossData.Extensao
             }
         }
 
-        public static IEnumerable<EntidadeValidacaoDTO> VerificarEntidadeExiste(this IDbConnection connection, IEnumerable<Type> entidades)
+        public static IEnumerable<EntidadeValidacao> VerificarEntidadeExiste(this IDbConnection connection, IEnumerable<Type> entidades)
         {
-            var resultado = new List<EntidadeValidacaoDTO>();
+            var resultado = new List<EntidadeValidacao>();
 
             if (entidades.Count() <= 0)
                 return resultado;
@@ -64,7 +66,7 @@ namespace JJ.NET.CrossData.Extensao
 
             foreach (var item in entidades)
             {
-                var entidade = new EntidadeValidacaoDTO
+                var entidade = new EntidadeValidacao
                 {
                     TipoEntidade = item,
                     Existe = false,
@@ -72,17 +74,17 @@ namespace JJ.NET.CrossData.Extensao
 
                 try
                 {
-                    string query = ConfiguracaoBancoDados.TipoConexaoSelecionada switch
+                    string query = TipoBancoDados switch
                     {
-                        Conexao.SQLite => $"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{entidade.Nome}';",
-                        Conexao.SQLServer => $"SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{entidade.Nome}'",
-                        Conexao.MySql => $"SELECT count(*) FROM information_schema.tables WHERE table_name = '{entidade.Nome}'",
+                        TipoBancoDados.SQLite => $"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{entidade.Nome}';",
+                        TipoBancoDados.SQLServer => $"SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{entidade.Nome}'",
+                        TipoBancoDados.MySQL => $"SELECT count(*) FROM information_schema.tables WHERE table_name = '{entidade.Nome}'",
                         _ => throw new InvalidOperationException("Banco de dados não suportado")
                     };
 
                     entidade.Existe = connection.ExecuteScalar<int>(query) > 0;
                 }
-                catch 
+                catch
                 {
                     entidade.Existe = false;
                 }
@@ -290,7 +292,7 @@ namespace JJ.NET.CrossData.Extensao
                 {
                     // Adicionar a definição da chave estrangeira com o nome da chave primária referenciada
                     string fk = SQLTradutorFactory.ObterSintaxeForeignKey(columnName, relacionamento.Tabela, relacionamento.ChavePrimaria);
-                    
+
                     if (!ehObrigatorio)
                         fk += " ON DELETE SET NULL";
 
@@ -321,7 +323,7 @@ namespace JJ.NET.CrossData.Extensao
             }
         }
 
-        public static bool CriarTabelas(this IDbConnection connection,  string query, IDbTransaction transaction = null)
+        public static bool CriarTabelas(this IDbConnection connection, string query, IDbTransaction transaction = null)
         {
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentException("A query para criação das tabelas não pode ser nula ou vazia.");

@@ -4,17 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.CrossData.Enumerador
+namespace JJ.Net.CrossData.Enumerador
 {
-    public enum Conexao
-    {
-        SQLite = 1,
-        SQLServer = 2,
-        MySql = 3,
-    }
-    public enum Plataforma
-    {
-        Android,
-        Desktop
+    public enum TipoBancoDados 
+    { 
+        SQLite = 1, 
+        SQLServer = 2, 
+        MySQL = 3 
     }
 }

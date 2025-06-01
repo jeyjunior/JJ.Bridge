@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Core.Extensoes
+namespace JJ.Net.Core.Extensoes
 {
     public static class EnumerableExtensions
     {

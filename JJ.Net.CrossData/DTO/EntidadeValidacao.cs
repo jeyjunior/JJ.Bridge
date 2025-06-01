@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.Net.WinUI3.CrossData.DTO
+namespace JJ.Net.CrossData.DTO
 {
     public class EntidadeValidacao
     {

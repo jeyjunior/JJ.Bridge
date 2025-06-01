@@ -1,16 +1,16 @@
-﻿using System;
-using System.Text;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using JJ.Net.Cryptography.DTO;
+using JJ.Net.Cryptography.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
-using JJ.NET.Cryptography.DTO;
-using JJ.NET.Cryptography.Interfaces;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
-namespace JJ.NET.Cryptography
+namespace JJ.Net.Cryptography
 {
-    public class Seguranca :  ISeguranca
+    public class Seguranca : ISeguranca
     {
         private const string KMFileName = "cclrf.json";
         private readonly string KMPath = "";
@@ -103,7 +103,7 @@ namespace JJ.NET.Cryptography
                 using (var aes = Aes.Create())
                 {
                     aes.Key = derivedKey;
-                    aes.GenerateIV(); 
+                    aes.GenerateIV();
 
                     using (var encryptor = aes.CreateEncryptor())
                     using (var ms = new MemoryStream())
@@ -175,4 +175,3 @@ namespace JJ.NET.Cryptography
         }
     }
 }
-

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Core.DTO
+namespace JJ.Net.Core.DTO
 {
     public class Item
     {

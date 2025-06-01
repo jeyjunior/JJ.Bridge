@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Core.Enumeradores
+namespace JJ.Net.Core.Enumeradores
 {
     public enum ModoEdicao
     {

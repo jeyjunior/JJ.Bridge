@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using JJ.Net.Data.Interfaces;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JJ.NET.Data.Interfaces;
 
-namespace JJ.NET.Data
+namespace JJ.Net.Data
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
@@ -16,7 +11,7 @@ namespace JJ.NET.Data
 
         public UnitOfWork(IDbConnection dbConnection)
         {
-            _connection = dbConnection; 
+            _connection = dbConnection;
         }
 
         public IDbConnection Connection => _connection;

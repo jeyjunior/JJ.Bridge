@@ -1,11 +1,11 @@
-﻿using System;
+﻿using JJ.Net.Core.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JJ.NET.Core.DTO;
 
-namespace JJ.NET.Core.Extensoes
+namespace JJ.Net.Core.Extensoes
 {
     public static class ItemExtensions
     {

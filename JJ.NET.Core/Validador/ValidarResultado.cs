@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Core.Validador
+namespace JJ.Net.Core.Validador
 {
     public class ValidarResultado
     {
@@ -40,7 +40,7 @@ namespace JJ.NET.Core.Validador
 
         public string ObterPrimeiroErro()
         {
-            if(_erros.Count > 0)
+            if (_erros.Count > 0)
                 return _erros[0];
 
             return "";

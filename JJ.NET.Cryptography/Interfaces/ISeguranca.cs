@@ -1,11 +1,11 @@
-﻿using System;
+﻿using JJ.Net.Cryptography.DTO;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using JJ.NET.Cryptography.DTO;
 
-namespace JJ.NET.Cryptography.Interfaces
+namespace JJ.Net.Cryptography.Interfaces
 {
     public interface ISeguranca
     {

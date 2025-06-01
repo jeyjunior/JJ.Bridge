@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Cryptography.DTO
+namespace JJ.Net.Cryptography.DTO
 {
     public abstract class CryptoBase
     {

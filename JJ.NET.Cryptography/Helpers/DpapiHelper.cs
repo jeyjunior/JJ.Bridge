@@ -6,7 +6,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JJ.NET.Cryptography.Helpers
+namespace JJ.Net.Cryptography.Helpers
 {
     internal static class DpapiHelper
     {

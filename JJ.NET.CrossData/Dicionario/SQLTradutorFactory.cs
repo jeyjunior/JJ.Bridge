@@ -1,25 +1,28 @@
-﻿using System;
+﻿using JJ.Net.CrossData.Atributo;
+using JJ.Net.CrossData.CrossData;
+using JJ.Net.CrossData.Enumerador;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using JJ.NET.CrossData.Atributo;
-using JJ.NET.CrossData.Enumerador;
 
-namespace JJ.NET.CrossData.Dicionario
+namespace JJ.Net.CrossData.Dicionario
 {
     public static class SQLTradutorFactory
     {
+        public static TipoBancoDados TipoBancoDados { get; set; }
+
         public static string ObterUltimoInsert()
         {
             string query = "";
 
-            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
+            switch (TipoBancoDados)
             {
-                case Conexao.SQLite: query = "SELECT last_insert_rowid();"; break;
-                case Conexao.SQLServer: query = "SELECT SCOPE_IDENTITY();"; break;
-                case Conexao.MySql: query = "SELECT LAST_INSERT_ID();"; break;
+                case TipoBancoDados.SQLite: query = "SELECT last_insert_rowid();"; break;
+                case TipoBancoDados.SQLServer: query = "SELECT SCOPE_IDENTITY();"; break;
+                case TipoBancoDados.MySQL: query = "SELECT LAST_INSERT_ID();"; break;
             }
 
             return query;
@@ -29,11 +32,11 @@ namespace JJ.NET.CrossData.Dicionario
         {
             DateTime dateTimeValue = (DateTime)value;
 
-            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
+            switch (TipoBancoDados)
             {
-                case Conexao.SQLite:
-                case Conexao.MySql:
-                case Conexao.SQLServer:
+                case TipoBancoDados.SQLite:
+                case TipoBancoDados.MySQL:
+                case TipoBancoDados.SQLServer:
                     // Tratar a data conforme necessário para cada DB
                     break;
             }
@@ -43,13 +46,13 @@ namespace JJ.NET.CrossData.Dicionario
 
         public static string ObterSintaxeChavePrimaria()
         {
-            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
+            switch (TipoBancoDados)
             {
-                case Conexao.SQLite:
+                case TipoBancoDados.SQLite:
                     return "PRIMARY KEY AUTOINCREMENT";
-                case Conexao.SQLServer:
+                case TipoBancoDados.SQLServer:
                     return "PRIMARY KEY IDENTITY";
-                case Conexao.MySql:
+                case TipoBancoDados.MySQL:
                     return "PRIMARY KEY AUTO_INCREMENT";
                 default:
                     throw new InvalidOperationException("Banco de dados não suportado para sintaxe de chave primária.");
@@ -58,13 +61,13 @@ namespace JJ.NET.CrossData.Dicionario
 
         public static string ObterSintaxeForeignKey(string columnName, string tabelaReferenciada, string chavePrimaria)
         {
-            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
+            switch (TipoBancoDados)
             {
-                case Conexao.SQLite:
+                case TipoBancoDados.SQLite:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
-                case Conexao.SQLServer:
+                case TipoBancoDados.SQLServer:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
-                case Conexao.MySql:
+                case TipoBancoDados.MySQL:
                     return $"FOREIGN KEY ({columnName}) REFERENCES {tabelaReferenciada}({chavePrimaria})";
                 default:
                     throw new InvalidOperationException("Banco de dados não suportado para criação de chaves estrangeiras.");
@@ -110,9 +113,9 @@ namespace JJ.NET.CrossData.Dicionario
                     throw new ArgumentException($"Tipo de propriedade não suportado: {propriedade.PropertyType.Name}");
             }
 
-            switch (ConfiguracaoBancoDados.TipoConexaoSelecionada)
+            switch (TipoBancoDados)
             {
-                case Conexao.SQLite:
+                case TipoBancoDados.SQLite:
                     if (propertyType == typeof(bool))
                     {
                         tipoColuna = "INTEGER";
@@ -123,14 +126,14 @@ namespace JJ.NET.CrossData.Dicionario
                     }
                     break;
 
-                case Conexao.SQLServer:
+                case TipoBancoDados.SQLServer:
                     if (propertyType == typeof(bool))
                     {
                         tipoColuna = "BIT";
                     }
                     break;
 
-                case Conexao.MySql:
+                case TipoBancoDados.MySQL:
                     if (propertyType == typeof(bool))
                     {
                         tipoColuna = "TINYINT(1)";
@@ -141,7 +144,7 @@ namespace JJ.NET.CrossData.Dicionario
                     throw new InvalidOperationException("Banco de dados não suportado para tipos de dados.");
             }
 
-            if (ConfiguracaoBancoDados.TipoConexaoSelecionada == Conexao.MySql || ConfiguracaoBancoDados.TipoConexaoSelecionada == Conexao.SQLServer)
+            if (TipoBancoDados == TipoBancoDados.MySQL || TipoBancoDados == TipoBancoDados.SQLServer)
             {
                 if (propertyType == typeof(string))
                 {

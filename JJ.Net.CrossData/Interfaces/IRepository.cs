@@ -1,15 +1,15 @@
-﻿using System;
+﻿using JJ.Net.CrossData.Enumerador;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using JJ.Net.WinUI3.CrossData.Enumerador;
 
-namespace JJ.Net.WinUI3.CrossData.Interface
+namespace JJ.Net.CrossData.Interfaces
 {
     public interface IRepository<TEntity> : IDisposable where TEntity : class
     {
-        Conexao Conexao { get; set; }
+        TipoBancoDados Conexao { get; set; }
         TEntity Obter(int id);
         IEnumerable<TEntity> ObterLista(string condition = "", object parameters = null);
         int Adicionar(TEntity entity);

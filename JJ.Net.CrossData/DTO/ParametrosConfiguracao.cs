@@ -15,10 +15,6 @@ namespace JJ.Net.CrossData.DTO
         /// Para conexões que utilizam string de conexão
         /// </summary>
         public string? StringConexao { get; set; } // 
-        /// <summary>
-        /// Para conexões SQLite existente
-        /// </summary>
-        public string? CaminhoBanco { get; set; } 
         public string NomeAplicacao { get; set; } = string.Empty;
         public string? CaminhoArquivoConfig { get; set; } // Opcional para outros bancos
     }

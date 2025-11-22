@@ -1,15 +1,15 @@
-﻿using Dapper;
-using JJ.Net.CrossData_WinUI_3.Atributo;
-using JJ.Net.CrossData_WinUI_3.Dicionario;
-using JJ.Net.CrossData_WinUI_3.DTO;
-using JJ.Net.CrossData_WinUI_3.Enumerador;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
+using JJ.Net.CrossData_WinUI_3.Atributo;
+using JJ.Net.CrossData_WinUI_3.Dicionario;
+using JJ.Net.CrossData_WinUI_3.DTO;
+using JJ.Net.CrossData_WinUI_3.Enumerador;
 
 namespace JJ.Net.CrossData_WinUI_3.Extensao
 {
@@ -253,7 +253,8 @@ namespace JJ.Net.CrossData_WinUI_3.Extensao
 
             PropertyInfo[] properties = entityType.GetProperties();
             List<string> columns = new List<string>();
-            List<string> foreignKeys = new List<string>(); // Lista para armazenar as FK
+            List<string> foreignKeys = new List<string>();
+            List<string> uniqueConstraints = new List<string>(); // Para constraints UNIQUE separadas
 
             foreach (PropertyInfo property in properties)
             {
@@ -266,31 +267,53 @@ namespace JJ.Net.CrossData_WinUI_3.Extensao
                 string columnType = SQLTradutorFactory.ObterTipoColuna(property);
 
                 bool ehObrigatorio = true;
+                List<string> columnAttributes = new List<string>();
 
                 // Verificar se é Chave Primária
                 if (property.GetCustomAttribute<ChavePrimaria>() != null)
                 {
-                    columns.Add($"{columnName} {columnType} {SQLTradutorFactory.ObterSintaxeChavePrimaria()}");
+                    columnAttributes.Add(SQLTradutorFactory.ObterSintaxeChavePrimaria(property));
                 }
                 else
                 {
                     // Verificar se a propriedade é obrigatória
                     if (property.GetCustomAttribute<Obrigatorio>() != null)
                     {
-                        columns.Add($"{columnName} {columnType} NOT NULL");
+                        columnAttributes.Add("NOT NULL");
                     }
                     else
                     {
-                        columns.Add($"{columnName} {columnType}");
                         ehObrigatorio = false;
                     }
                 }
+
+                // Verificar se é UNIQUE
+                var uniqueAttr = property.GetCustomAttribute<Unique>();
+                if (uniqueAttr?.EhUnico == true)
+                {
+                    columnAttributes.Add(SQLTradutorFactory.ObterSintaxeUnique());
+                }
+
+                // Verificar se tem DEFAULT VALUE
+                var defaultValue = SQLTradutorFactory.ObterValorPadrao(property);
+                if (!string.IsNullOrEmpty(defaultValue))
+                {
+                    columnAttributes.Add(defaultValue);
+                }
+
+                // Montar a definição da coluna
+                string columnDefinition = $"{columnName} {columnType}";
+                if (columnAttributes.Any())
+                {
+                    columnDefinition += " " + string.Join(" ", columnAttributes);
+                }
+
+                columns.Add(columnDefinition);
 
                 // Verificar se é uma Foreign Key
                 var relacionamento = property.GetCustomAttribute<Relacionamento>();
                 if (relacionamento != null)
                 {
-                    // Adicionar a definição da chave estrangeira com o nome da chave primária referenciada
                     string fk = SQLTradutorFactory.ObterSintaxeForeignKey(columnName, relacionamento.Tabela, relacionamento.ChavePrimaria);
 
                     if (!ehObrigatorio)
@@ -315,7 +338,7 @@ namespace JJ.Net.CrossData_WinUI_3.Extensao
             try
             {
                 var ret = connection.Execute(createTableSql.ToString(), transaction: transaction);
-                return (ret > 0);
+                return true;
             }
             catch (Exception ex)
             {

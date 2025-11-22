@@ -96,4 +96,41 @@ namespace JJ.Net.CrossData_WinUI_3.Atributo
             FontFamily = fontFamily;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class Identity : Attribute
+    {
+        public bool HabilitarIdentity { get; private set; }
+        public string ConfiguracaoPersonalizada { get; private set; }
+
+        public Identity(bool habilitar = true, string configuracaoPersonalizada = null)
+        {
+            HabilitarIdentity = habilitar;
+            ConfiguracaoPersonalizada = configuracaoPersonalizada;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class Unique : Attribute
+    {
+        public bool EhUnico { get; private set; }
+
+        public Unique(bool ehUnico = true)
+        {
+            EhUnico = ehUnico;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class DefaultValue : Attribute
+    {
+        public string Valor { get; private set; }
+        public bool UsarFuncaoBanco { get; private set; }
+
+        public DefaultValue(string valor, bool usarFuncaoBanco = false)
+        {
+            Valor = valor;
+            UsarFuncaoBanco = usarFuncaoBanco;
+        }
+    }
 }

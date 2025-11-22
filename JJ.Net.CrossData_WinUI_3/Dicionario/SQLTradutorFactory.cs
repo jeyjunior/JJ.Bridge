@@ -162,5 +162,90 @@ namespace JJ.Net.CrossData_WinUI_3.Dicionario
             return tipoColuna;
         }
 
+        public static string ObterSintaxeChavePrimaria(PropertyInfo propriedade = null)
+        {
+            // Verificar se há atributo Identity na propriedade
+            var identityAttr = propriedade?.GetCustomAttribute<Identity>();
+            bool habilitarIdentity = identityAttr?.HabilitarIdentity ?? true;
+
+            switch (TipoBancoDados)
+            {
+                case TipoBancoDados.SQLite:
+                    return habilitarIdentity ? "PRIMARY KEY AUTOINCREMENT" : "PRIMARY KEY";
+                case TipoBancoDados.SQLServer:
+                    return habilitarIdentity ? "PRIMARY KEY IDENTITY(1,1)" : "PRIMARY KEY";
+                case TipoBancoDados.MySQL:
+                    return habilitarIdentity ? "PRIMARY KEY AUTO_INCREMENT" : "PRIMARY KEY";
+                default:
+                    throw new InvalidOperationException("Banco de dados não suportado para sintaxe de chave primária.");
+            }
+        }
+
+        public static string ObterSintaxeUnique()
+        {
+            switch (TipoBancoDados)
+            {
+                case TipoBancoDados.SQLite:
+                case TipoBancoDados.SQLServer:
+                case TipoBancoDados.MySQL:
+                    return "UNIQUE";
+                default:
+                    throw new InvalidOperationException("Banco de dados não suportado para sintaxe UNIQUE.");
+            }
+        }
+
+        public static string ObterValorPadrao(PropertyInfo propriedade)
+        {
+            var defaultValueAttr = propriedade.GetCustomAttribute<DefaultValue>();
+            if (defaultValueAttr == null)
+                return string.Empty;
+
+            if (defaultValueAttr.UsarFuncaoBanco)
+            {
+                return $"DEFAULT {defaultValueAttr.Valor}";
+            }
+            else
+            {
+                // Para valores literais
+                Type propertyType = Nullable.GetUnderlyingType(propriedade.PropertyType) ?? propriedade.PropertyType;
+
+                switch (propertyType.Name.ToLower())
+                {
+                    case "string":
+                        return $"DEFAULT '{defaultValueAttr.Valor}'";
+                    case "boolean":
+                    case "bool":
+                        bool valorBool = bool.TryParse(defaultValueAttr.Valor, out var result) ? result :
+                                       (defaultValueAttr.Valor == "1" || defaultValueAttr.Valor.ToLower() == "true");
+                        switch (TipoBancoDados)
+                        {
+                            case TipoBancoDados.SQLite:
+                                return $"DEFAULT {(valorBool ? "1" : "0")}";
+                            case TipoBancoDados.SQLServer:
+                                return $"DEFAULT {(valorBool ? "1" : "0")}";
+                            case TipoBancoDados.MySQL:
+                                return $"DEFAULT {(valorBool ? "1" : "0")}";
+                            default:
+                                return $"DEFAULT {(valorBool ? "1" : "0")}";
+                        }
+                    case "int32":
+                    case "int64":
+                    case "int16":
+                    case "decimal":
+                    case "double":
+                    case "float":
+                        return $"DEFAULT {defaultValueAttr.Valor}";
+                    case "datetime":
+                        // Se for uma data padrão específica
+                        if (DateTime.TryParse(defaultValueAttr.Valor, out DateTime dataPadrao))
+                        {
+                            return $"DEFAULT '{dataPadrao:yyyy-MM-dd HH:mm:ss}'";
+                        }
+                        return string.Empty;
+                    default:
+                        return $"DEFAULT {defaultValueAttr.Valor}";
+                }
+            }
+        }
     }
 }

@@ -79,17 +79,45 @@ namespace JJ.Net.Core.Extensoes
         }
 
         /// <summary>
-        /// Converte uma string para inteiro, retornando um valor padrão se a conversão falhar ou a string for nula ou em branco.
+        /// Converte uma string para inteiro (Int32), retornando um valor padrão se a conversão falhar ou a string for nula ou em branco.
         /// </summary>
         /// <param name="valor">A string a ser convertida.</param>
         /// <param name="valorPadrao">O valor padrão a ser retornado caso a conversão falhe.</param>
-        /// <returns>O valor convertido para inteiro ou o valor padrão.</returns>
+        /// <returns>O valor convertido para Int32 ou o valor padrão.</returns>
         public static int ConverterParaInt32(this string valor, int valorPadrao = 0)
         {
             if (string.IsNullOrWhiteSpace(valor))
                 return valorPadrao;
 
             return int.TryParse(valor, out int result) ? result : valorPadrao;
+        }
+
+        /// <summary>
+        /// Converte uma string para inteiro curto (Int16), retornando um valor padrão se a conversão falhar ou a string for nula ou em branco.
+        /// </summary>
+        /// <param name="valor">A string a ser convertida.</param>
+        /// <param name="valorPadrao">O valor padrão a ser retornado caso a conversão falhe.</param>
+        /// <returns>O valor convertido para Int16 ou o valor padrão.</returns>
+        public static short ConverterParaInt16(this string valor, short valorPadrao = 0)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return valorPadrao;
+
+            return short.TryParse(valor, out short result) ? result : valorPadrao;
+        }
+
+        /// <summary>
+        /// Converte uma string para inteiro longo (Int64), retornando um valor padrão se a conversão falhar ou a string for nula ou em branco.
+        /// </summary>
+        /// <param name="valor">A string a ser convertida.</param>
+        /// <param name="valorPadrao">O valor padrão a ser retornado caso a conversão falhe.</param>
+        /// <returns>O valor convertido para Int64 ou o valor padrão.</returns>
+        public static long ConverterParaInt64(this string valor, long valorPadrao = 0)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return valorPadrao;
+
+            return long.TryParse(valor, out long result) ? result : valorPadrao;
         }
 
         /// <summary>
@@ -104,6 +132,34 @@ namespace JJ.Net.Core.Extensoes
                 return valorPadrao;
 
             return decimal.TryParse(valor, out decimal result) ? result : valorPadrao;
+        }
+
+        /// <summary>
+        /// Converte uma string para double (ponto flutuante de precisão dupla), retornando um valor padrão se a conversão falhar ou a string for nula ou em branco.
+        /// </summary>
+        /// <param name="valor">A string a ser convertida.</param>
+        /// <param name="valorPadrao">O valor padrão a ser retornado caso a conversão falhe.</param>
+        /// <returns>O valor convertido para double ou o valor padrão.</returns>
+        public static double ConverterParaDouble(this string valor, double valorPadrao = 0.0)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return valorPadrao;
+
+            return double.TryParse(valor, out double result) ? result : valorPadrao;
+        }
+
+        /// <summary>
+        /// Converte uma string para float (ponto flutuante de precisão simples), retornando um valor padrão se a conversão falhar ou a string for nula ou em branco.
+        /// </summary>
+        /// <param name="valor">A string a ser convertida.</param>
+        /// <param name="valorPadrao">O valor padrão a ser retornado caso a conversão falhe.</param>
+        /// <returns>O valor convertido para float ou o valor padrão.</returns>
+        public static float ConverterParaFloat(this string valor, float valorPadrao = 0f)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+                return valorPadrao;
+
+            return float.TryParse(valor, out float result) ? result : valorPadrao;
         }
 
         /// <summary>

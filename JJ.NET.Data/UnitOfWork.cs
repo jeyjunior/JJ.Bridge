@@ -1,4 +1,5 @@
 ﻿using JJ.Net.Data.Interfaces;
+using Microsoft.Data.Sqlite;
 using System.Data;
 
 namespace JJ.Net.Data

@@ -13,14 +13,17 @@ namespace JJ.Net.CrossData_WinUI_3.Provider
     {
         public IDbConnection CriarConexao(ParametrosConfiguracao parametros)
         {
+            if (parametros != null)
+                return new Microsoft.Data.SqlClient.SqlConnection(parametros.StringConexao);
+
             return new Microsoft.Data.SqlClient.SqlConnection();
         }
 
         public Task<IDbConnection> CriarConexaoAsync(ParametrosConfiguracao parametros)
         {
-            // Lógica para SQL Server
-            // Se string conexão fornecida, usa
-            // Senão, tenta carregar de arquivo config
+            if (parametros != null)
+                return Task.FromResult<IDbConnection>(new Microsoft.Data.SqlClient.SqlConnection(parametros.StringConexao));
+
             return Task.FromResult<IDbConnection>(new Microsoft.Data.SqlClient.SqlConnection()); 
         }
     }
